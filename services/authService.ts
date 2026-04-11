@@ -86,9 +86,6 @@ export const register = async (email: string, password: string, fullName: string
       options: {
         data: {
           full_name: fullName,
-          name: fullName,
-          username: fullName || email,
-          avatar_url: 'https://www.gravatar.com/avatar/?d=mp',
           role: 'REGULAR'
         }
       }
