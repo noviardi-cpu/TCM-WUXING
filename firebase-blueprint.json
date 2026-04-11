@@ -1,0 +1,65 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the application",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "role": { "type": "string", "enum": ["SUPER_SAINT", "SUPER_USER", "ADMIN", "REGULAR"] },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["uid", "username", "role", "createdAt"]
+    },
+    "Patient": {
+      "title": "Patient",
+      "description": "A patient record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "patientName": { "type": "string" },
+        "visitDate": { "type": "string" },
+        "age": { "type": "number" },
+        "sex": { "type": "string" },
+        "complaint": { "type": "string" },
+        "symptoms": { "type": "string" },
+        "tongue": { "type": "string" },
+        "pulse": { "type": "string" },
+        "biomedicalDiagnosis": { "type": "string" },
+        "tcmDiagnosis": { "type": "string" },
+        "treatmentPlan": { "type": "string" },
+        "herbalPrescription": { "type": "string" },
+        "acupuncturePoints": { "type": "string" },
+        "authorUid": { "type": "string" }
+      },
+      "required": ["id", "patientName", "authorUid"]
+    },
+    "Settings": {
+      "title": "Settings",
+      "description": "Application settings",
+      "type": "object",
+      "properties": {
+        "geminiApiKey": { "type": "string" },
+        "geminiApiKeys": { "type": "array" },
+        "clinicName": { "type": "string" },
+        "clinicAddress": { "type": "string" },
+        "clinicPhone": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/patients/{patientId}": {
+      "schema": { "$ref": "#/entities/Patient" },
+      "description": "Patient records"
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/Settings" },
+      "description": "Global application settings"
+    }
+  }
+}

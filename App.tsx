@@ -5,7 +5,6 @@ import { Language, ChatMessage, ScoredSyndrome, UserAccount, TcmDiagnosisResult,
 import { sendMessageToGeminiStream } from './services/geminiService';
 import { analyzePatient } from './services/tcmLogic';
 import { db, DEFAULT_ADMIN } from './services/db';
-import { getSupabase, isSupabaseConfigured } from './supabase';
 import DiagnosisCard from './components/DiagnosisCard';
 import PatientFormModal from './components/PatientFormModal';
 import WuXingVisualizerModal from './components/WuXingVisualizerModal';
@@ -125,24 +124,15 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const initAuth = async () => {
-      if (!isSupabaseConfigured()) {
-        const saved = localStorage.getItem('tcm_active_session');
-        if (saved) setCurrentUser(JSON.parse(saved));
-        setIsAuthReady(true);
-        return;
-      }
-
-      try {
-        const supabase = getSupabase();
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
+    import('./firebase').then(({ auth, onAuthStateChanged }) => {
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
           setCurrentUser({
-            uid: session.user.id,
-            username: session.user.user_metadata.full_name || session.user.email || 'User',
+            uid: user.uid,
+            username: user.displayName || user.email || 'User',
             password: '',
-            role: (session.user.user_metadata.role as any) || 'REGULAR',
-            createdAt: new Date(session.user.created_at).getTime()
+            role: 'REGULAR',
+            createdAt: new Date(user.metadata.creationTime || Date.now()).getTime()
           });
         } else {
           const saved = localStorage.getItem('tcm_active_session');
@@ -152,44 +142,17 @@ const App: React.FC = () => {
              setCurrentUser(null);
           }
         }
-      } catch (e) {
-        console.error("Auth init error:", e);
-        const saved = localStorage.getItem('tcm_active_session');
-        if (saved) setCurrentUser(JSON.parse(saved));
-      }
+        setIsAuthReady(true);
+      });
+      return () => unsubscribe();
+    }).catch(() => {
+      // Fallback if firebase fails to load
+      const saved = localStorage.getItem('tcm_active_session');
+      if (saved) setCurrentUser(JSON.parse(saved));
       setIsAuthReady(true);
-    };
-
-    initAuth();
-
-    let subscription: any;
-    if (isSupabaseConfigured()) {
-      try {
-        const supabase = getSupabase();
-        const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-          if (session?.user) {
-            setCurrentUser({
-              uid: session.user.id,
-              username: session.user.user_metadata.full_name || session.user.email || 'User',
-              password: '',
-              role: (session.user.user_metadata.role as any) || 'REGULAR',
-              createdAt: new Date(session.user.created_at).getTime()
-            });
-          } else {
-            const saved = localStorage.getItem('tcm_active_session');
-            if (!saved) setCurrentUser(null);
-          }
-        });
-        subscription = data.subscription;
-      } catch (e) {
-        console.warn("Supabase auth subscription skipped:", e);
-      }
-    }
-
-    return () => {
-      if (subscription) subscription.unsubscribe();
-    };
+    });
   }, []);
+
 
   const [activePanel, setActivePanel] = useState<'chat' | 'diagnosis' | 'wuxing' | 'ukom' | 'archive' | 'atlas' | 'invoice' | 'bmi'>('chat');
   const [appLanguage, setAppLanguage] = useState<Language>(Language.INDONESIAN);
@@ -331,11 +294,14 @@ const App: React.FC = () => {
     setActivePanel('diagnosis');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setCurrentUser(null);
     localStorage.removeItem('tcm_active_session');
-    if (isSupabaseConfigured()) {
-      getSupabase().auth.signOut();
+    try {
+      const { auth } = await import('./firebase');
+      await auth.signOut();
+    } catch (e) {
+      console.error("Logout error:", e);
     }
     window.location.reload();
   };
@@ -423,7 +389,7 @@ const App: React.FC = () => {
              <div className="flex items-center gap-2 px-3 py-1 bg-purple-100/50 rounded-full border border-purple-200">
                 <div className="w-2 h-2 rounded-full bg-fuchsia-500 animate-pulse"></div>
                 <span className="text-[9px] md:text-[10px] font-black uppercase tracking-widest text-purple-500">
-                  {isSupabaseConfigured() ? "Cloud Sync" : "Local Mode"}
+                  Cloud Sync
                 </span>
              </div>
            </div>

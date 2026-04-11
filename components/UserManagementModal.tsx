@@ -3,7 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { X, UserPlus, Trash2, Shield, User, AlertCircle, Save, Settings, Database, Key, MapPin, Phone, LogOut, Zap } from 'lucide-react';
 import { UserAccount, AppSettings, ApiKeyEntry } from '../types';
 import { db } from '../services/db';
-import { getSupabase, isSupabaseConfigured } from '../supabase';
+import { collection, query, onSnapshot } from 'firebase/firestore';
+import { db as firestore, auth } from '../firebase';
+import { updatePassword } from 'firebase/auth';
 
 interface Props {
   isOpen: boolean;
@@ -35,18 +37,10 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
-    let channel: any;
+    let unsubscribe: any;
     if (isOpen) {
       const fetchData = async () => {
-        if (!isSupabaseConfigured()) {
-          setUsers([currentUser]);
-          return;
-        }
         try {
-          const supabase = getSupabase();
-          const { data: userData, error: userError } = await supabase.from('users').select('*');
-          if (!userError) setUsers(userData || []);
-
           const s = await db.settings.get();
           if (s) {
             setGeminiKey(s.geminiApiKey || '');
@@ -56,32 +50,30 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
             setClinicPhone(s.clinicPhone || '');
           }
         } catch (e) {
-          console.warn("Supabase fetch data skipped:", e);
+          console.warn("Fetch settings skipped:", e);
         }
       };
       
       fetchData();
 
-      if (isSupabaseConfigured()) {
-        try {
-          const supabase = getSupabase();
-          channel = supabase
-            .channel('users_changes')
-            .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
-              fetchData();
-            })
-            .subscribe();
-        } catch (e) {
-          console.warn("Supabase real-time subscription skipped:", e);
-        }
+      try {
+        const q = query(collection(firestore, 'users'));
+        unsubscribe = onSnapshot(q, (snapshot) => {
+          const userData: UserAccount[] = [];
+          snapshot.forEach((doc) => {
+            userData.push(doc.data() as UserAccount);
+          });
+          setUsers(userData);
+        });
+      } catch (e) {
+        console.warn("Firebase real-time subscription skipped:", e);
+        // Fallback to local
+        db.users.getAll().then(setUsers);
       }
     }
     return () => {
-      if (channel && isSupabaseConfigured()) {
-        try {
-          const supabase = getSupabase();
-          supabase.removeChannel(channel);
-        } catch (e) {}
+      if (unsubscribe) {
+        unsubscribe();
       }
     };
   }, [isOpen]);
@@ -215,12 +207,8 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
 
     setIsChangingPassword(true);
     try {
-      if (isSupabaseConfigured()) {
-        const supabase = getSupabase();
-        const { error: authError } = await supabase.auth.updateUser({ password: newOwnPassword });
-        if (authError) throw authError;
-        
-        // Also update our custom table if needed
+      if (auth.currentUser) {
+        await updatePassword(auth.currentUser, newOwnPassword);
         await db.users.add({ ...currentUser, password: '' }); 
       } else {
         const updatedUser = { ...currentUser, password: newOwnPassword };
@@ -231,7 +219,7 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
       setSuccessMsg('Password berhasil diubah. Silakan login kembali.');
       setTimeout(() => {
         localStorage.removeItem('tcm_active_session');
-        if (isSupabaseConfigured()) getSupabase().auth.signOut();
+        if (auth.currentUser) auth.signOut();
         window.location.reload();
       }, 2000);
     } catch (e: any) {
@@ -259,10 +247,8 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
       const result = await db.users.delete(uid);
       if (result) {
         localStorage.removeItem('tcm_active_session');
-        if (isSupabaseConfigured()) {
-          // Note: Supabase doesn't allow users to delete themselves easily without a function 
-          // but we can at least sign them out and remove from our table.
-          await getSupabase().auth.signOut();
+        if (auth.currentUser) {
+          await auth.currentUser.delete();
         }
         window.location.reload();
       } else {

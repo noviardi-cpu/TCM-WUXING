@@ -8,8 +8,8 @@ import {
   PlusCircle, MinusCircle, AlertCircle, Clock, History, BarChart3, ShieldAlert, RefreshCw,
   Phone, Mail
 } from 'lucide-react';
-
-import { getSupabase, isSupabaseConfigured } from '../supabase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db as firestore, auth } from '../firebase';
 
 interface Props {
   onLoadPatient: (patient: SavedPatient) => void;
@@ -22,54 +22,19 @@ const PatientArchivePanel: React.FC<Props> = ({ onLoadPatient }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    let channel: any;
-    
-    const fetchPatients = async () => {
-      if (!isSupabaseConfigured()) return;
-      try {
-        const supabase = getSupabase();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
-        
-        const { data, error } = await supabase
-          .from('patients')
-          .select('*')
-          .eq('authorUid', user.id);
-          
-        if (error) {
-          console.error("Error fetching patients:", error);
-        } else {
-          setPatients(data || []);
-        }
-      } catch (e) {
-        console.warn("Supabase fetch patients skipped:", e);
-      }
-    };
+    if (!auth.currentUser) return;
+    const q = query(collection(firestore, 'patients'), where('authorUid', '==', auth.currentUser.uid));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const pts: SavedPatient[] = [];
+      snapshot.forEach((doc) => {
+        pts.push(doc.data() as SavedPatient);
+      });
+      setPatients(pts);
+    }, (error) => {
+      console.error("Error fetching patients:", error);
+    });
 
-    fetchPatients();
-
-    if (isSupabaseConfigured()) {
-      try {
-        const supabase = getSupabase();
-        channel = supabase
-          .channel('patients_changes')
-          .on('postgres_changes', { event: '*', schema: 'public', table: 'patients' }, (payload) => {
-            fetchPatients();
-          })
-          .subscribe();
-      } catch (e) {
-        console.warn("Supabase real-time subscription skipped:", e);
-      }
-    }
-
-    return () => {
-      if (channel && isSupabaseConfigured()) {
-        try {
-          const supabase = getSupabase();
-          supabase.removeChannel(channel);
-        } catch (e) {}
-      }
-    };
+    return () => unsubscribe();
   }, []);
 
   const loadPatients = async () => {

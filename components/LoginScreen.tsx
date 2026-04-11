@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Lock, User, LogIn, Database, Zap, Chrome, Mail, UserPlus } from 'lucide-react';
-import { login, register } from '../services/authService';
+import { login, register, loginWithGoogle } from '../services/authService';
 import { UserAccount } from '../types';
 import { DEFAULT_ADMIN } from '../services/db';
 
@@ -49,6 +49,21 @@ const LoginScreen: React.FC<Props> = ({ onLoginSuccess }) => {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    setError('');
+    setIsLoading(true);
+    try {
+      const user = await loginWithGoogle();
+      if (user) {
+        onLoginSuccess(user);
+      } else {
+        setError('Gagal login dengan Google.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleQuickAccess = () => {
     onLoginSuccess(DEFAULT_ADMIN);
   };
@@ -62,6 +77,21 @@ const LoginScreen: React.FC<Props> = ({ onLoginSuccess }) => {
           </div>
           <h1 className="text-3xl font-black text-[#4C1D95] uppercase tracking-tight mb-1">TCM WuXing Pro</h1>
           <p className="text-[#A78BFA] text-[10px] font-bold uppercase tracking-[0.2em] mb-8">Clinical Decision Support System</p>
+        </div>
+
+        <button 
+          onClick={handleGoogleLogin}
+          disabled={isLoading}
+          className="w-full bg-white border border-[#EDE9FE] text-[#4C1D95] font-black py-4 rounded-2xl shadow-sm hover:bg-[#F9F5FF] hover:border-[#C4B5FD] active:scale-[0.98] transition-all flex items-center justify-center gap-3 mb-6"
+        >
+          <Chrome className="w-5 h-5 text-[#7C3AED]" />
+          {isLoading ? 'Processing...' : 'Login dengan Google'}
+        </button>
+
+        <div className="flex items-center gap-4 mb-6">
+          <div className="h-px bg-[#EDE9FE] flex-1"></div>
+          <span className="text-[10px] font-bold text-[#A78BFA] uppercase tracking-widest">Atau Mode Offline</span>
+          <div className="h-px bg-[#EDE9FE] flex-1"></div>
         </div>
 
         <div className="bg-[#F9F5FF] p-1.5 rounded-2xl flex mb-8">
@@ -117,17 +147,17 @@ const LoginScreen: React.FC<Props> = ({ onLoginSuccess }) => {
             disabled={isLoading}
             className="w-full bg-[#7C3AED] text-white font-black py-5 rounded-2xl shadow-xl shadow-purple-200 hover:brightness-110 active:scale-[0.98] transition-all uppercase tracking-widest text-sm disabled:opacity-50"
           >
-             {isLoading ? 'Processing...' : activeTab === 'login' ? 'Login Klinik' : 'Daftar Akun'}
+             {isLoading ? 'Processing...' : activeTab === 'login' ? 'Login Offline' : 'Daftar Offline'}
           </button>
         </form>
 
         <div className="pt-8 space-y-6">
            <div className="space-y-3">
              <p className="text-[9px] text-center font-black text-[#A78BFA] uppercase tracking-widest">
-               Info: Gunakan akun klinik Anda untuk mengakses data pasien
+               Info: Gunakan akun Google untuk sinkronisasi cloud
              </p>
              <p className="text-[9px] text-center font-black text-[#A78BFA] uppercase tracking-widest">
-               dan fitur diagnosa profesional Enterprise.
+               atau gunakan mode offline untuk data lokal.
              </p>
            </div>
            

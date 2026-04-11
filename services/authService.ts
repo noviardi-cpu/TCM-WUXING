@@ -1,11 +1,11 @@
 
 import { UserAccount } from '../types';
-import { db } from './db';
-import { getSupabase, isSupabaseConfigured } from '../supabase';
+import { db as localDb } from './db';
+import { auth, signInWithPopup, googleProvider, signOut } from '../firebase';
 
 // Ensure DB is initialized
 export const getUsers = async (): Promise<UserAccount[]> => {
-  return await db.users.getAll();
+  return await localDb.users.getAll();
 };
 
 export const saveUser = async (user: UserAccount): Promise<{ success: boolean, message: string }> => {
@@ -14,7 +14,7 @@ export const saveUser = async (user: UserAccount): Promise<{ success: boolean, m
       return { success: false, message: 'Username and password are required.' };
   }
   
-  const success = await db.users.add(user);
+  const success = await localDb.users.add(user);
   if (success) {
       return { success: true, message: 'User successfully saved to database.' };
   } else {
@@ -27,7 +27,7 @@ export const deleteUser = async (username: string): Promise<{ success: boolean, 
       return { success: false, message: 'Cannot delete the main admin account.' };
   }
   
-  const success = await db.users.delete(username);
+  const success = await localDb.users.delete(username);
   if (success) {
       return { success: true, message: 'User deleted from database.' };
   } else {
@@ -35,85 +35,48 @@ export const deleteUser = async (username: string): Promise<{ success: boolean, 
   }
 };
 
-export const login = async (email: string, password: string): Promise<UserAccount | null> => {
-  if (!isSupabaseConfigured()) {
-    // Fallback to local/custom DB if Supabase is not configured
-    const users = await getUsers();
-    const user = users.find(u => u.username === email && u.password === password);
-    return user || null;
-  }
-
+export const loginWithGoogle = async (): Promise<UserAccount | null> => {
   try {
-    const supabase = getSupabase();
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) throw error;
-
-    if (data.user) {
-      return {
-        uid: data.user.id,
-        username: data.user.user_metadata.full_name || data.user.email || 'User',
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    
+    if (user) {
+      const userAccount: UserAccount = {
+        uid: user.uid,
+        username: user.displayName || user.email || 'User',
         password: '', // Don't store password in memory
-        role: data.user.user_metadata.role || 'REGULAR',
-        createdAt: new Date(data.user.created_at).getTime()
+        role: 'REGULAR',
+        createdAt: new Date(user.metadata.creationTime || Date.now()).getTime()
       };
+      
+      // Save to local db for management
+      await localDb.users.add(userAccount);
+      return userAccount;
     }
     return null;
-  } catch (e: any) {
-    console.error("Supabase Login Error:", e);
-    // Fallback to custom DB for legacy accounts if needed, 
-    // but usually we want to stick to Supabase Auth now.
-    const users = await getUsers();
-    const user = users.find(u => u.username === email && u.password === password);
-    return user || null;
+  } catch (error: any) {
+    console.error("Firebase Login Error:", error);
+    return null;
   }
+};
+
+export const logout = async (): Promise<void> => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Firebase Logout Error:", error);
+  }
+};
+
+// Legacy login for local storage fallback
+export const login = async (email: string, password: string): Promise<UserAccount | null> => {
+  const users = await getUsers();
+  const user = users.find(u => u.username === email && u.password === password);
+  return user || null;
 };
 
 export const register = async (email: string, password: string, fullName: string): Promise<{ success: boolean, message: string }> => {
-  if (!isSupabaseConfigured()) {
-    const ok = await db.users.register({ username: email, password });
-    return ok ? { success: true, message: 'Registrasi berhasil!' } : { success: false, message: 'Registrasi gagal.' };
-  }
-
-  try {
-    const supabase = getSupabase();
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: fullName,
-          role: 'REGULAR'
-        }
-      }
-    });
-
-    if (error) {
-      console.error("Supabase signUp returned error:", JSON.stringify(error, null, 2));
-      throw error;
-    }
-    
-    if (data.user) {
-      // Also add to our custom users table for management if needed
-      await db.users.add({
-        uid: data.user.id,
-        username: fullName || email,
-        password: '', // Don't store password
-        role: 'REGULAR',
-        createdAt: Date.now()
-      });
-      return { success: true, message: 'Registrasi berhasil! Silakan cek email Anda untuk konfirmasi (jika diaktifkan).' };
-    }
-    return { success: false, message: 'Terjadi kesalahan saat registrasi.' };
-  } catch (e: any) {
-    console.error("Supabase Register Error:", e);
-    let errorMessage = e.message || 'Terjadi kesalahan saat registrasi.';
-    if (errorMessage.includes('Database error saving new user')) {
-      errorMessage = 'Database error saving new user. This usually means a Postgres trigger on auth.users is failing in your Supabase project. Please check your Supabase database logs, ensure your trigger has "security definer", and verify the target table exists with the correct schema.';
-    }
-    return { success: false, message: errorMessage };
-  }
+  const ok = await localDb.users.register({ username: email, password });
+  return ok ? { success: true, message: 'Registrasi berhasil!' } : { success: false, message: 'Registrasi gagal.' };
 };
+
