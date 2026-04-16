@@ -9,7 +9,7 @@ const parsePoints = (str: string) => toArray(str).map(s => {
     return s.split(' ')[0].replace('HE-', 'HT').replace('LIV-', 'LR').replace('Ren-', 'CV').replace('Du-', 'GV').replace('P-', 'PC').replace('-', '');
 });
 
-const MACIOCIA_DATA: Syndrome[] = [
+export const MACIOCIA_SYNDROMES: Syndrome[] = [
   // --- FIRE (HEART / SI) ---
   {
     id: "HEART_QI_DEFICIENCY",
@@ -54,19 +54,22 @@ const MACIOCIA_DATA: Syndrome[] = [
     acupuncture_points: parsePoints("SI-2, SI-5, HT-5, HT-8, ST-39"),
   },
   {
-    id: "HEART_FIRE_BLAZING",
+    id: "heart-fire-blazing",
     name_id: "Api Jantung Berkobar",
-    name_en: "Heart Fire Blazing",
+    name_en: "Heart Fire-Blazing",
+    name_pinyin: "Xin Huo Shang Yan",
     primary_organs: ["Heart"],
     wuxing_element: "Fire",
-    pattern_type: "full_heat_excess",
-    clinical_manifestations: toArray("Palpitations, Thirst, Mouth and tongue ulcers, Mental restlessness, Agitation, Feeling of heat, Red face, Insomnia, Dream-disturbed sleep, Dark urine, Blood in urine, Bitter taste"),
-    tongue: toArray("Red, Tip redder and swollen with red points, Yellow coating, Midline crack to tip"),
-    pulse: toArray("Full-Rapid-Overflowing (Left Front), Hasty"),
-    key_symptoms: toArray("Tongue ulcers, Thirst, Palpitations, Red tongue"),
-    treatment_principle: toArray("Clear the Heart, Drain Fire, Calm the Mind"),
-    acupuncture_points: parsePoints("HT-9, HT-8, HT-7, CV-15, SP-6, KI-6, LI-11, GV-24"),
-    diagnostic_tip: "Look for the red tip of the tongue."
+    pattern_type: "Excess Heat",
+    clinical_manifestations: ["Palpitations", "Thirst", "Mouth and tongue ulcers", "Mental restlessness", "Feeling of heat, red face", "Insomnia", "Dark urine or blood in urine", "Bitter taste"],
+    tongue: ["Red tongue, tip redder and swollen with red points, yellow coating, possible midline crack"],
+    pulse: ["Full-Rapid-Overflowing (left Front position), may be Hasty"],
+    key_symptoms: ["Tongue ulcers", "Thirst", "Palpitations", "Red tongue"],
+    treatment_principle: ["Clear the Heart, drain Fire, and calm the Mind (Shen)"],
+    acupuncture_points: parsePoints("HT-9, HT-7, SP-6, LI-11, GV-24, DU-19, HT-8, CV-15, KI-6"),
+    herbal_prescription: "Xie Xin Tang (Draining the Heart Decoction)",
+    needling_method: "Reducing on all points except SP-6 and KI-6 (reinforcing); no moxa",
+    diagnostic_tip: "Tongue ulcers + red tongue tip + palpitations = classic Heart Fire"
   },
   {
     id: "HEART_BLOOD_DEFICIENCY",
@@ -97,18 +100,19 @@ const MACIOCIA_DATA: Syndrome[] = [
     acupuncture_points: parsePoints("HT-7, PC-6, CV-14, CV-15, HT-6, SP-6, KI-7"),
   },
   {
-    id: "HEART_YANG_DEFICIENCY",
+    id: "heart-yang-deficiency",
     name_id: "Defisiensi Yang Jantung",
-    name_en: "Heart Yang Deficiency",
+    name_en: "Heart-Yang Deficiency",
     primary_organs: ["Heart"],
     wuxing_element: "Fire",
-    pattern_type: "deficiency_cold",
-    clinical_manifestations: toArray("Palpitations, Shortness of breath on exertion, Tiredness, Spontaneous sweating, Slight feeling of stuffiness or discomfort in the heart region, Feeling of cold, Cold hands, Bright-pale face, Slightly dark lips"),
-    tongue: toArray("Pale, Wet, Swollen"),
-    pulse: toArray("Deep-Weak, Knotted"),
-    key_symptoms: toArray("Palpitations, Cold hands, Deep-Weak pulse"),
-    treatment_principle: toArray("Tonify and warm Heart-Yang, Calm the Mind"),
-    acupuncture_points: parsePoints("HT-5, PC-6, CV-14, BL-15, CV-17, CV-6, DU-14"),
+    pattern_type: "Cold Deficiency",
+    clinical_manifestations: ["Palpitations", "Shortness of breath on exertion", "Tiredness, spontaneous sweating", "Feeling cold, cold hands"],
+    tongue: ["Pale, slightly wet"],
+    pulse: ["Deep-Weak (may be Knotted)"],
+    key_symptoms: ["Palpitations + cold hands + spontaneous sweating"],
+    treatment_principle: ["Tonify and warm Heart-Yang, support Heart-Qi"],
+    acupuncture_points: parsePoints("HT-5, PC-6, BL-15, CV-17, CV-6"),
+    herbal_prescription: "Rou Fu Bao Yuan Tang"
   },
   {
     id: "HEART_BLOOD_STASIS",
@@ -155,18 +159,21 @@ const MACIOCIA_DATA: Syndrome[] = [
     acupuncture_points: parsePoints("GB-24, LR-14, GB-34, LI-11, TB-6, LR-2, SP-9, CV-12"),
   },
   {
-    id: "LIVER_FIRE_BLAZING",
-    name_id: "Api Hati Berkobar",
-    name_en: "Liver Fire Blazing",
+    id: "liver-fire-blazing",
+    name_id: "Api Liver Berkobar",
+    name_en: "Liver Fire-Blazing",
+    name_pinyin: "Gan Huo Shang Yan",
     primary_organs: ["Liver"],
     wuxing_element: "Wood",
-    pattern_type: "full_heat_excess",
-    clinical_manifestations: toArray("Headache, Dizziness, Red face and eyes, Irritability, Outbursts of anger, Bitter taste, Dry throat, Constipation, Dark-yellow urine, Tinnitus, Epistaxis"),
-    tongue: toArray("Red body, Redder sides, Yellow coating"),
-    pulse: toArray("Wiry, Rapid"),
-    key_symptoms: toArray("Red eyes, Anger, Bitter taste, Wiry pulse"),
-    treatment_principle: toArray("Clear Liver-Fire, Drain Heat, Subdue rising Qi"),
+    pattern_type: "Excess Heat",
+    clinical_manifestations: ["Headache, dizziness", "Red face and eyes", "Irritability, outbursts of anger", "Bitter taste, dry throat", "Constipation", "Dark-yellow urine", "Tinnitus"],
+    tongue: ["Red tongue with redder sides and yellow coating"],
+    pulse: ["Wiry and Rapid"],
+    key_symptoms: ["Red eyes/face", "Anger, irritability", "Bitter taste", "Wiry-rapid pulse"],
+    treatment_principle: ["Clear Liver-Fire, drain Heat, and subdue rising"],
     acupuncture_points: parsePoints("LR-2, LR-3, GB-20, LI-11, GV-24, Taiyang"),
+    herbal_prescription: "Long Dan Xie Gan Tang",
+    needling_method: "Reducing on all points; no moxa"
   },
   {
     id: "LIVER_QI_STAGNATION",
@@ -342,18 +349,19 @@ const MACIOCIA_DATA: Syndrome[] = [
 
   // --- METAL (LUNG / LI) ---
   {
-    id: "DAMP_PHLEGM_IN_LUNGS",
-    name_id: "Dahak-Lembap di Paru",
-    name_en: "Damp-Phlegm in the Lungs",
-    primary_organs: ["Lung"],
+    id: "cold-phlegm-lungs",
+    name_id: "Dahak-Dingin di Paru",
+    name_en: "Cold-Phlegm in the Lungs",
+    primary_organs: ["Lungs"],
     wuxing_element: "Metal",
-    pattern_type: "excess_cold",
-    clinical_manifestations: toArray("Chronic cough coming in bouts, Profuse white sticky sputum which is easy to expectorate, White pasty complexion, A feeling of oppression in the chest, Shortness of breath, Dislike of lying down, Wheezing, Nausea, A feeling of heaviness, Fuzziness of the head and dizziness"),
-    tongue: toArray("Swollen, Thick sticky white coating"),
-    pulse: toArray("Slippery or Soggy"),
-    key_symptoms: toArray("Chronic cough with profuse white sputum, Thick sticky white coating, Slippery pulse"),
-    treatment_principle: toArray("Resolve Phlegm, Restore the descending of Lung-Qi"),
-    acupuncture_points: parsePoints("LU-5, LU-7, LU-1, CV-17, ST-40, PC-6, SP-3, SP-6, CV-12, CV-9"),
+    pattern_type: "Cold Excess (Interior)",
+    clinical_manifestations: ["Cough with copious white watery sputum", "Cough worse with cold", "Feeling cold, cold hands", "Phlegm in throat", "Oppression in chest"],
+    tongue: ["Swollen and wet with sticky white coating"],
+    pulse: ["Slippery-Slow"],
+    key_symptoms: ["Copious white watery sputum", "Feeling cold"],
+    treatment_principle: ["Resolve Dampness and Phlegm, restore descending of Lung-Qi"],
+    acupuncture_points: parsePoints("LU-5, LU-7, ST-40, CV-17"),
+    herbal_prescription: "Er Chen Tang"
   },
   {
     id: "DAMP_HEAT_IN_LARGE_INTESTINE",
@@ -412,18 +420,19 @@ const MACIOCIA_DATA: Syndrome[] = [
     acupuncture_points: parsePoints("LU-9, LU-1, BL-13, CV-17, KI-6, SP-6"),
   },
   {
-    id: "WIND_COLD_INVADING_LUNGS",
-    name_id: "Angin-Dingin Menyerang Paru",
-    name_en: "Wind-Cold Invading the Lungs",
-    primary_organs: ["Lung"],
+    id: "invasion-lungs-wind-cold",
+    name_id: "Invasi Angin-Dingin ke Paru",
+    name_en: "Invasion of the Lungs by Wind-Cold",
+    primary_organs: ["Lungs"],
     wuxing_element: "Metal",
-    pattern_type: "excess_cold",
-    clinical_manifestations: toArray("Aversion to cold, Fever, Cough, Itchy throat, Slight breathlessness, Stuffed or runny nose with clear watery discharge, Sneezing, Occipital headache, Body aches"),
-    tongue: toArray("Thin white coating"),
-    pulse: toArray("Floating-Tight"),
-    key_symptoms: toArray("Aversion to cold, Sneezing, Floating pulse"),
-    treatment_principle: toArray("Release the Exterior, Dispel Cold, Stimulate the descending and diffusing of Lung-Qi"),
-    acupuncture_points: parsePoints("LU-7, BL-12, DU-16, GB-20, LI-4"),
+    pattern_type: "Cold Excess (Exterior)",
+    clinical_manifestations: ["Aversion to cold, mild fever", "No sweating", "Body aches, stiff neck", "Cough with thin white sputum", "Runny/blocked nose"],
+    tongue: ["Thin white coating"],
+    pulse: ["Floating-Tight"],
+    key_symptoms: ["No sweating", "Aversion to cold", "Thin white sputum"],
+    treatment_principle: ["Release Exterior, expel Wind-Cold, restore Lung diffusion"],
+    acupuncture_points: parsePoints("LU-7, LI-4, BL-12, GB-20"),
+    herbal_prescription: "Ma Huang Tang"
   },
   {
     id: "WIND_HEAT_INVADING_LUNGS",
@@ -544,9 +553,9 @@ const MACIOCIA_DATA: Syndrome[] = [
 
 export const TCM_DB: TcmDatabase = {
   metadata: {
-    db_name: "TCM Maciocia Database",
-    version: "2.5.0",
-    sources_used: ["Giovanni Maciocia - Foundations of Chinese Medicine"],
+    db_name: "Maciocia Full Syndromes 2026",
+    version: "3.0",
+    sources_used: ["Foundations of Chinese Medicine 3rd Ed."],
     scope_note: "Core syndromes and protocols for clinical CDSS."
   },
   clinical_config: {},
@@ -588,7 +597,7 @@ export const TCM_DB: TcmDatabase = {
   },
   special_point_tables: {},
   syndromes: {
-    FILLED_FROM_PDF: [...MACIOCIA_DATA],
+    FILLED_FROM_PDF: [...MACIOCIA_SYNDROMES],
     TODO_FROM_PDF: [...MACIOCIA_100_PATTERNS] as Syndrome[]
   },
   herbal_guidelines: {

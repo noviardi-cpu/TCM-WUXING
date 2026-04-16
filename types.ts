@@ -100,6 +100,9 @@ export interface TcmDiagnosisResult {
   };
   obesity_indication?: string | null;
   beauty_acupuncture?: string | null;
+  keySymptoms?: string[];
+  tongueDescription?: string;
+  pulseDescription?: string;
 }
 
 export enum Language {

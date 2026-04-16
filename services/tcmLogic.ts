@@ -206,9 +206,16 @@ export const getHerbalRecommendation = (syndrome: Syndrome) => {
   return undefined;
 };
 
+const WEIGHTS = {
+  key_symptoms:           50,   // 50%
+  clinical_manifestations: 25,   // 25%
+  tongue:                 15,    // 15%
+  pulse:                  10     // 10%
+};
+
 /**
  * Performs clinical analysis using weighted scoring and fuzzy matching.
- * Weights: Key Symptoms (50), Manifestations (15), Tongue (20), Pulse (20).
+ * Weights: Key Symptoms (50), Manifestations (25), Tongue (15), Pulse (10).
  */
 export const analyzePatient = (data: any): ScoredSyndrome[] => {
     const allSyndromes = [...TCM_DB.syndromes.FILLED_FROM_PDF];
@@ -223,34 +230,34 @@ export const analyzePatient = (data: any): ScoredSyndrome[] => {
         let score = 0;
         let matchedTraits: string[] = [];
 
-        // 1. Match Key Symptoms (Highest Weight: 50)
+        // 1. Match Key Symptoms
         (syn.key_symptoms || []).forEach(ks => {
             if (allInputSymptoms.some(input => fuzzyMatch(input, ks))) {
-              score += 50;
+              score += WEIGHTS.key_symptoms;
               matchedTraits.push(`Kunci: ${ks}`);
             }
         });
 
-        // 2. Match Clinical Manifestations (Weight: 15)
+        // 2. Match Clinical Manifestations
         (syn.clinical_manifestations || []).forEach(cm => {
             if (allInputSymptoms.some(input => fuzzyMatch(input, cm))) {
-              score += 15;
+              score += WEIGHTS.clinical_manifestations;
               matchedTraits.push(`Gejala: ${cm}`);
             }
         });
 
-        // 3. Match Tongue (Weight: 20)
+        // 3. Match Tongue
         (syn.tongue || []).forEach(st => {
             if (fuzzyMatch(tongueInfo, st)) {
-                score += 20;
+                score += WEIGHTS.tongue;
                 matchedTraits.push(`Lidah: ${st}`);
             }
         });
 
-        // 4. Match Pulse (Weight: 20)
+        // 4. Match Pulse
         (syn.pulse || []).forEach(sp => {
             if (pulseInfo.some(pi => fuzzyMatch(pi, sp))) {
-                score += 20;
+                score += WEIGHTS.pulse;
                 matchedTraits.push(`Nadi: ${sp}`);
             }
         });

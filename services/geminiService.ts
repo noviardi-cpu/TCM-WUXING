@@ -159,7 +159,10 @@ export const sendMessageToGeminiStream = async (
                     }
                   },
                   obesity_indication: { type: Type.STRING },
-                  beauty_acupuncture: { type: Type.STRING }
+                  beauty_acupuncture: { type: Type.STRING },
+                  keySymptoms: { type: Type.ARRAY, items: { type: Type.STRING } },
+                  tongueDescription: { type: Type.STRING },
+                  pulseDescription: { type: Type.STRING }
                 }
               }
             }
