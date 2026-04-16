@@ -150,6 +150,17 @@ export const sendMessageToGeminiStream = async (
                     }
                   },
                   wuxingElement: { type: Type.STRING },
+                  wuxingRelationships: {
+                    type: Type.ARRAY,
+                    items: {
+                      type: Type.OBJECT,
+                      properties: {
+                        type: { type: Type.STRING },
+                        targetElement: { type: Type.STRING },
+                        description: { type: Type.STRING }
+                      }
+                    }
+                  },
                   lifestyleAdvice: { type: Type.STRING },
                   herbal_recommendation: { 
                     type: Type.OBJECT,

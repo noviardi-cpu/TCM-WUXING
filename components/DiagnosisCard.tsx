@@ -191,6 +191,42 @@ ${diagnosis.lifestyleAdvice}
            </div>
         </div>
 
+        {/* === ANALISA WU XING (TEXT ONLY) === */}
+        <div className="mb-8 bg-gradient-to-r from-purple-50 to-amber-50 border border-purple-100 rounded-3xl p-6">
+          <div className="flex items-center gap-2 mb-4">
+            <Zap className="w-5 h-5 text-amber-600" />
+            <h4 className="font-black text-amber-700 uppercase tracking-widest text-sm">Analisa Wu Xing Pathological Process</h4>
+          </div>
+
+          <div className="text-sm leading-relaxed text-purple-800 space-y-4">
+            <p>
+              <strong>Elemen Utama:</strong> {diagnosis.wuxingElement || 'Belum terdeteksi'} 
+            </p>
+
+            {diagnosis.wuxingRelationships && diagnosis.wuxingRelationships.length > 0 ? (
+              diagnosis.wuxingRelationships.map((rel: any, i: number) => (
+                <div key={i} className="border-l-4 border-amber-400 pl-4">
+                  <span className="font-semibold">
+                    {rel.type === 'Overacting' || rel.type === 'Cheng' ? 'Cheng (Tertindas)' : 'Wu (Merampok)'}
+                  </span>
+                  <span className="ml-2 text-amber-600">
+                    — {rel.description}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="italic text-purple-600">
+                Tidak terdeteksi hubungan patologis Wu Xing yang signifikan pada kasus ini.
+              </p>
+            )}
+
+            <p className="text-xs text-purple-500 mt-4">
+              Catatan: Cheng = Elemen terlalu kuat menindas elemen lain.<br />
+              Wu = Elemen yang seharusnya dikendalikan justru menyerang balik.
+            </p>
+          </div>
+        </div>
+
         {/* QR CODE SECTION */}
         <div className="flex justify-end mb-6 print:hidden">
           <div className="flex flex-col items-center bg-white border border-purple-200 rounded-3xl p-4 shadow-sm">
