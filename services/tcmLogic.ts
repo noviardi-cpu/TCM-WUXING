@@ -71,110 +71,109 @@ const extractSymptoms = (text: string): string[] => {
 };
 
 /**
- * Refined Wu Xing Relationships based on Maciocia's Clinical Principles.
- * Captures Sheng (Generating), Ke (Controlling), Cheng (Overacting), and Wu (Insulting).
- * Differentiation based on Excess (Shi) vs Deficiency (Xu).
+ * === ANALISA WU XING YANG LEBIH DETAIL & EDUKATIF ===
  */
-const getBaseWuxingRelationships = (element: string, patternType: string) => {
+const getBaseWuxingRelationships = (element: string, patternType: string, syndromeId: string) => {
   const relationships: any[] = [];
   const el = (element || "").toLowerCase();
-  const pt = (patternType || "").toLowerCase();
-  const isExcess = pt.includes('excess') || pt.includes('full') || pt.includes('stagnation') || pt.includes('invasion') || pt.includes('fire');
-  const isDeficiency = pt.includes('deficiency') || pt.includes('empty') || pt.includes('xu');
 
-  // WOOD (Liver/Gallbladder)
-  if (el.includes('wood')) {
-    if (isExcess) {
+  switch (syndromeId) {
+    case "heart-fire-blazing":
       relationships.push({
-        type: 'Overacting', targetElement: 'Earth',
-        description: 'Kayu berlebih (Hati Shi) menindas Tanah (Limpa/Lambung), mengakibatkan stagnasi makanan atau diare (Hati menyerang Limpa).'
+        type: "Cheng (Overacting / Tertindas)",
+        description: "Elemen Api (Heart) berlebihan menindas elemen Logam (Lung).",
+        disturbedElement: "Fire (Heart)",
+        affectedElement: "Metal (Lung)",
+        reason: "Api yang terlalu kuat mengganggu siklus Ke normal, sehingga Lung gagal mengendalikan Api.",
+        clinicalImplication: "Lung Qi menjadi lemah, mudah timbul batuk, sesak napas, atau kekeringan."
       });
-      relationships.push({
-        type: 'Insulting', targetElement: 'Metal',
-        description: 'Api Hati menghina Logam (Paru), memicu gejala batuk atau sesak akibat Qi Paru tidak dapat turun (Kayu menghina Logam).'
-      });
-    } else if (isDeficiency) {
-      relationships.push({
-        type: 'Generating', targetElement: 'Fire',
-        description: 'Ibu (Kayu) gagal menghidupi Anak (Api); Defisiensi Darah Hati memicu Defisiensi Darah Jantung (Ibu Gagal menghidupi Anak).'
-      });
-      relationships.push({
-        type: 'Insulting', targetElement: 'Water',
-        description: 'Anak (Kayu) menguras Ibu (Air); Defisiensi Hati yang kronis akhirnya melemahkan Ginjal (Anak menguras Ibu).'
-      });
-    }
-  } 
-  
-  // FIRE (Heart/Small Intestine)
-  else if (el.includes('fire')) {
-    if (isExcess) {
-      relationships.push({
-        type: 'Overacting', targetElement: 'Metal',
-        description: 'Api berlebih (Api Jantung) melukai Logam (Paru); Panas Jantung yang ekstrem mengeringkan cairan Paru.'
-      });
-      relationships.push({
-        type: 'Insulting', targetElement: 'Water',
-        description: 'Api menghina Air; Panas Jantung yang berkobar melawan kontrol dingin Ginjal.'
-      });
-    } else if (isDeficiency) {
-      relationships.push({
-        type: 'Generating', targetElement: 'Earth',
-        description: 'Api yang padam (Yang Jantung Def) gagal menghangatkan Tanah (Limpa); menyebabkan kegagalan transportasi makanan.'
-      });
-    }
-  }
+      break;
 
-  // EARTH (Spleen/Stomach)
-  else if (el.includes('earth')) {
-    if (isExcess) {
+    case "liver-fire-blazing":
+      relationships.push({
+        type: "Cheng (Overacting / Tertindas)",
+        description: "Elemen Kayu (Liver) terlalu kuat menindas elemen Tanah (Spleen).",
+        disturbedElement: "Wood (Liver)",
+        affectedElement: "Earth (Spleen)",
+        reason: "Liver Fire berlebih melanggar siklus Ke, sehingga Spleen tidak mampu mentransformasi dan mengangkut dengan baik.",
+        clinicalImplication: "Sering muncul masalah pencernaan, kembung, diare, dan kelelahan."
+      });
+      break;
+
+    case "spleen-yang-deficiency":
+      relationships.push({
+        type: "Wu (Insulting / Merampok)",
+        description: "Elemen Tanah (Spleen) yang lemah 'dirampok' oleh elemen Kayu (Liver).",
+        disturbedElement: "Earth (Spleen)",
+        affectedElement: "Wood (Liver)",
+        reason: "Spleen Yang Deficiency membuat Tanah tidak kuat mengendalikan Kayu, sehingga Liver Qi mudah stagnan.",
+        clinicalImplication: "Mudah marah, kembung, dan pencernaan terganggu meski pola utamanya adalah Spleen Deficiency."
+      });
+      break;
+
+    case "kidney-yang-deficiency":
+      relationships.push({
+        type: "Wu (Insulting / Merampok)",
+        description: "Elemen Air (Kidney) yang lemah gagal mengendalikan Api (Heart), sehingga muncul Empty-Heat.",
+        disturbedElement: "Water (Kidney)",
+        affectedElement: "Fire (Heart)",
+        reason: "Defisiensi Yang Ginjal menyebabkan Air tidak mampu mengontrol Api.",
+        clinicalImplication: "Muncul gejala panas kosong seperti keringat malam, gelisah, dan palpitasi."
+      });
+      break;
+
+    default:
+      // Fallback to general element-based logic if no specific syndrome match
+      const pt = (patternType || "").toLowerCase();
+      const isExcess = pt.includes('excess') || pt.includes('full') || pt.includes('stagnation') || pt.includes('invasion') || pt.includes('fire');
+      const isDeficiency = pt.includes('deficiency') || pt.includes('empty') || pt.includes('xu');
+
+      if (el.includes('wood')) {
+        if (isExcess) {
+          relationships.push({ type: 'Cheng (Overacting / Tertindas)', description: 'Kayu berlebih (Hati Shi) menindas Tanah (Limpa/Lambung), mengakibatkan stagnasi makanan atau diare (Hati menyerang Limpa).', disturbedElement: 'Wood', affectedElement: 'Earth', reason: 'Liver Qi stagnasi atau Hati Shi.', clinicalImplication: 'Masalah pencernaan, gas, pergerakan usus tak teratur.' });
+          relationships.push({ type: 'Wu (Insulting / Merampok)', description: 'Api Hati menghina Logam (Paru), memicu gejala batuk atau sesak akibat Qi Paru tidak dapat turun.', disturbedElement: 'Wood', affectedElement: 'Metal', reason: 'Energi Kayu memberontak terhadap Logam.', clinicalImplication: 'Rasa sesak, napas pendek, asma.' });
+        } else if (isDeficiency) {
+          relationships.push({ type: 'Sheng (Generating)', description: 'Ibu (Kayu) gagal menghidupi Anak (Api); Defisiensi Darah Hati memicu Defisiensi Darah Jantung.', disturbedElement: 'Wood', affectedElement: 'Fire', reason: 'Defisiensi Yin/Darah Hati.', clinicalImplication: 'Palpitasi, insomnia, gelisah.' });
+        }
+      } else if (el.includes('fire')) {
+        if (isExcess) {
+          relationships.push({ type: 'Cheng (Overacting / Tertindas)', description: 'Api berlebih (Api Jantung) melukai Logam (Paru); Panas Jantung yang ekstrem mengeringkan cairan Paru.', disturbedElement: 'Fire', affectedElement: 'Metal', reason: 'Api Jantung berlebih.', clinicalImplication: 'Batuk kering, sakit tenggorokan.' });
+          relationships.push({ type: 'Wu (Insulting / Merampok)', description: 'Api menghina Air; Panas Jantung yang berkobar melawan kontrol dingin Ginjal.', disturbedElement: 'Fire', affectedElement: 'Water', reason: 'Panas ekstrem di Hati/Jantung.', clinicalImplication: 'Empty heat, keringat malam.' });
+        } else if (isDeficiency) {
+          relationships.push({ type: 'Sheng (Generating)', description: 'Api yang padam (Yang Jantung Def) gagal menghangatkan Tanah (Limpa); menyebabkan kegagalan transportasi makanan.', disturbedElement: 'Fire', affectedElement: 'Earth', reason: 'Yang Jantung menurun.', clinicalImplication: 'Lelah, pucat, tungkai dingin.' });
+        }
+      } else if (el.includes('earth')) {
+        if (isExcess) {
+            relationships.push({ type: 'Cheng (Overacting / Tertindas)', description: 'Tanah berlebih (Lembap Limpa) membendung Air (Ginjal); menyebabkan edema atau retensi cairan.', disturbedElement: 'Earth', affectedElement: 'Water', reason: 'Lembap Tanah menghalangi Air.', clinicalImplication: 'Edema, retensi cairan, kencing sedikit.' });
+            relationships.push({ type: 'Wu (Insulting / Merampok)', description: 'Lembap-Panas Limpa menghina Kayu (Hati); menghambat aliran bebas Qi Hati.', disturbedElement: 'Earth', affectedElement: 'Wood', reason: 'Lembap-Panas menumpuk.', clinicalImplication: 'Jaundice, kembung parah, mual.' });
+        } else if (isDeficiency) {
+            relationships.push({ type: 'Sheng (Generating)', description: 'Ibu (Tanah) gagal menumbuhkan Anak (Logam); Defisiensi Limpa sering memicu Defisiensi Paru.', disturbedElement: 'Earth', affectedElement: 'Metal', reason: 'Transportasi Spleen lemah.', clinicalImplication: 'Mudah flu, suara lemah, napas pendek.' });
+        }
+      } else if (el.includes('metal')) {
+        if (isExcess) {
+          relationships.push({ type: 'Cheng (Overacting / Tertindas)', description: 'Logam berlebih (Paru Shi) menyerang Kayu (Hati); menyebabkan spasme atau kekakuan otot.', disturbedElement: 'Metal', affectedElement: 'Wood', reason: 'Angin/Panas di Paru.', clinicalImplication: 'Kekakuan, nyeri muskuloskeletal.' });
+        } else if (isDeficiency) {
+          relationships.push({ type: 'Sheng (Generating)', description: 'Logam gagal menghasilkan Air; Qi Paru tidak turun untuk membantu Ginjal menerima Qi.', disturbedElement: 'Metal', affectedElement: 'Water', reason: 'Qi Paru lemah.', clinicalImplication: 'Sesak makin parah saat aktivitas.' });
+        }
+      } else if (el.includes('water')) {
+        if (isExcess) {
+          relationships.push({ type: 'Cheng (Overacting / Tertindas)', description: 'Air berlebih (Dingin Ginjal) memadamkan Api (Jantung); mengancam vitalitas Yang Jantung.', disturbedElement: 'Water', affectedElement: 'Fire', reason: 'Dingin menyebar dari Ginjal.', clinicalImplication: 'Palpitasi karena retensi cairan.' });
+        } else if (isDeficiency) {
+          relationships.push({ type: 'Sheng (Generating)', description: 'Air (Ibu) gagal menghidupi Kayu (Anak); Defisiensi Yin Ginjal gagal menutrisi Yin Hati, memicu Yang Hati naik.', disturbedElement: 'Water', affectedElement: 'Wood', reason: 'Ginjal tidak melembabkan Hati.', clinicalImplication: 'Mata kering, tinnitus, pusing.' });
+          relationships.push({ type: 'Wu (Insulting / Merampok)', description: 'Air yang lemah dihina oleh Tanah; Defisiensi Ginjal menyebabkan Tanah (Limpa) tidak terkendali.', disturbedElement: 'Water', affectedElement: 'Earth', reason: 'Defisiensi Yang Ginjal.', clinicalImplication: 'Diare pagi hari, kaki dingin.' });
+        }
+      }
+      
+      if (relationships.length === 0) {
         relationships.push({
-          type: 'Overacting', targetElement: 'Water',
-          description: 'Tanah berlebih (Lembap Limpa) membendung Air (Ginjal); menyebabkan edema atau retensi cairan.'
+          type: "Mild Imbalance",
+          description: `Elemen ${element} mengalami ketidakseimbangan ringan.`,
+          disturbedElement: element,
+          affectedElement: "—",
+          reason: "Tidak terdeteksi hubungan patologis Cheng atau Wu yang kuat.",
+          clinicalImplication: "Perlu observasi lebih lanjut dan data tambahan untuk analisa yang lebih akurat."
         });
-        relationships.push({
-          type: 'Insulting', targetElement: 'Wood',
-          description: 'Lembap-Panas Limpa menghina Kayu (Hati); menghambat aliran bebas Qi Hati.'
-        });
-    } else if (isDeficiency) {
-        relationships.push({
-          type: 'Generating', targetElement: 'Metal',
-          description: 'Ibu (Tanah) gagal menumbuhkan Anak (Logam); Defisiensi Limpa sering memicu Defisiensi Paru (Ibu gagal menumbuhkan Anak).'
-        });
-    }
-  }
-
-  // METAL (Lung/Large Intestine)
-  else if (el.includes('metal')) {
-    if (isExcess) {
-      relationships.push({
-        type: 'Overacting', targetElement: 'Wood',
-        description: 'Logam berlebih (Paru Shi) menyerang Kayu (Hati); menyebabkan spasme atau kekakuan otot.'
-      });
-    } else if (isDeficiency) {
-      relationships.push({
-        type: 'Generating', targetElement: 'Water',
-        description: 'Logam gagal menghasilkan Air; Qi Paru tidak turun untuk membantu Ginjal menerima Qi (Ibu gagal menghidupi Anak).'
-      });
-    }
-  }
-
-  // WATER (Kidney/Bladder)
-  else if (el.includes('water')) {
-    if (isExcess) {
-      relationships.push({
-        type: 'Overacting', targetElement: 'Fire',
-        description: 'Air berlebih (Dingin Ginjal) memadamkan Api (Jantung); mengancam vitalitas Yang Jantung.'
-      });
-    } else if (isDeficiency) {
-      relationships.push({
-        type: 'Generating', targetElement: 'Wood',
-        description: 'Air (Ibu) gagal menghidupi Kayu (Anak); Defisiensi Yin Ginjal gagal menutrisi Yin Hati, memicu Yang Hati naik.'
-      });
-      relationships.push({
-        type: 'Insulting', targetElement: 'Earth',
-        description: 'Air yang lemah dihina oleh Tanah; Defisiensi Ginjal menyebabkan Tanah (Limpa) tidak terkendali.'
-      });
-    }
+      }
   }
 
   return relationships;
@@ -280,6 +279,6 @@ export const analyzePatient = (data: any): ScoredSyndrome[] => {
           ...s.matchDetails.slice(0, 4)
         ],
         herbal_recommendation: getHerbalRecommendation(s.syndrome),
-        wuxingRelationships: getBaseWuxingRelationships(s.syndrome.wuxing_element, s.syndrome.pattern_type)
+        wuxingRelationships: getBaseWuxingRelationships(s.syndrome.wuxing_element, s.syndrome.pattern_type, s.syndrome.id)
     }));
 };

@@ -59,6 +59,14 @@ const LoginScreen: React.FC<Props> = ({ onLoginSuccess }) => {
       } else {
         setError('Gagal login dengan Google.');
       }
+    } catch (err: any) {
+      if (err.message && (err.message.includes('auth/network-request-failed') || err.message.includes('auth/popup-blocked'))) {
+        setError('Popup terblokir atau jaringan bermasalah di dalam pratinjau. Mohon klik ikon "Open out" / Buka di tab baru di sudut kanan atas untuk login Google.');
+      } else if (err.message && err.message.includes('auth/popup-closed-by-user')) {
+        setError('Login dibatalkan oleh pengguna.');
+      } else {
+        setError(err.message || 'Gagal login dengan Google.');
+      }
     } finally {
       setIsLoading(false);
     }

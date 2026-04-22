@@ -2,6 +2,7 @@
 import { UserAccount, SavedPatient, AppSettings } from '../types';
 import { db as firestore, auth } from '../firebase';
 import { collection, doc, getDoc, getDocs, setDoc, deleteDoc, query, where } from 'firebase/firestore';
+import { supabase } from '../supabase';
 
 export const DEFAULT_ADMIN: UserAccount = {
   uid: 'admin-init',
@@ -150,9 +151,28 @@ export const db = {
   },
   patients: {
     getAll: async (): Promise<SavedPatient[]> => {
-      if (!auth.currentUser) return [];
+      const uid = auth.currentUser?.uid || 'local-guest';
+      
+      // 1. Try Supabase First
+      if (supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('patients')
+            .select('*');
+            
+          if (!error && data) {
+            return data as SavedPatient[];
+          } else {
+            console.error('Supabase Error (patients.getAll):', error);
+          }
+        } catch (err) {
+          console.error('Supabase Exception:', err);
+        }
+      }
+
+      // 2. Fallback to Firebase
       try {
-        const q = query(collection(firestore, 'patients'), where('authorUid', '==', auth.currentUser.uid));
+        const q = query(collection(firestore, 'patients'), where('authorUid', '==', uid));
         const querySnapshot = await getDocs(q);
         const patients: SavedPatient[] = [];
         querySnapshot.forEach((doc) => {
@@ -161,25 +181,79 @@ export const db = {
         return patients;
       } catch (e) {
         console.error('Firebase Error (patients.getAll):', e);
-        return [];
+        
+        // 3. Fallback to local storage if both fail
+        const localData = localStorage.getItem('tcm_patients_local');
+        return localData ? JSON.parse(localData) : [];
       }
     },
     add: async (patient: SavedPatient) => {
-      if (!auth.currentUser) return;
+      const uid = auth.currentUser?.uid || 'local-guest';
+      const patientWithAuth = { ...patient, authorUid: uid };
+
+      // 1. Try Supabase
+      if (supabase) {
+        try {
+          // Flatten objects to make sure they can be inserted if columns aren't strict JSONs, 
+          // but assuming Supabase column is JSONB, it will handle it natively.
+          const { error } = await supabase
+            .from('patients')
+            .upsert(patientWithAuth);
+            
+          if (error) {
+            console.error('Supabase Error (patients.add):', error);
+          }
+        } catch (err) {
+          console.error('Supabase Exception (patients.add):', err);
+        }
+      }
+
+      // 2. Try Firebase
       try {
-        const patientWithAuth = { ...patient, authorUid: auth.currentUser.uid };
         await setDoc(doc(firestore, 'patients', patient.id), patientWithAuth);
       } catch (e) {
         console.error('Firebase Error (patients.add):', e);
       }
+      
+      // 3. Always save locally as a reliable offline cache
+      try {
+         const localData = localStorage.getItem('tcm_patients_local');
+         const patients: SavedPatient[] = localData ? JSON.parse(localData) : [];
+         const newPatients = [...patients.filter(p => p.id !== patient.id), patientWithAuth];
+         localStorage.setItem('tcm_patients_local', JSON.stringify(newPatients));
+      } catch (err) {}
     },
     delete: async (id: string) => {
-      if (!auth.currentUser) return;
+      // 1. Try Supabase
+      if (supabase) {
+        try {
+          const { error } = await supabase
+            .from('patients')
+            .delete()
+            .eq('id', id);
+          if (error) {
+            console.error('Supabase Error (patients.delete):', error);
+          }
+        } catch (err) {
+          console.error('Supabase Exception:', err);
+        }
+      }
+
+      // 2. Try Firebase
       try {
         await deleteDoc(doc(firestore, 'patients', id));
       } catch (e) {
         console.error('Firebase Error (patients.delete):', e);
       }
+      
+      // 3. Also delete locally
+      try {
+         const localData = localStorage.getItem('tcm_patients_local');
+         if (localData) {
+            const patients: SavedPatient[] = JSON.parse(localData);
+            localStorage.setItem('tcm_patients_local', JSON.stringify(patients.filter(p => p.id !== id)));
+         }
+      } catch (err) {}
     }
   }
 };

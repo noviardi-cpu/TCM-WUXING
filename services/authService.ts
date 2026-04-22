@@ -56,7 +56,7 @@ export const loginWithGoogle = async (): Promise<UserAccount | null> => {
     return null;
   } catch (error: any) {
     console.error("Firebase Login Error:", error);
-    return null;
+    throw error;
   }
 };
 

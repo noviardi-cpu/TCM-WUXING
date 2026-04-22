@@ -16,6 +16,10 @@ import UkomPracticePanel from './components/UkomPracticePanel';
 import PatientArchivePanel from './components/PatientArchivePanel';
 import SyndromeAtlasWindow from './components/SyndromeAtlasWindow';
 import AcupuncturePointsPanel from './components/AcupuncturePointsPanel';
+import WuXingEducationPage from './components/WuXingEducationPage';
+import ConsentModal from './components/ConsentModal';
+import PrivacyPolicyModal from './components/PrivacyPolicyModal';
+import PatientDashboard from './components/PatientDashboard';
 
 import InvoiceGeneratorPanel from './components/InvoiceGeneratorPanel';
 import BMIKomplitPanel from './components/BMIKomplitPanel';
@@ -79,8 +83,8 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 }
 
 const App: React.FC = () => {
-  const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
-  const [isAuthReady, setIsAuthReady] = useState(false);
+  const [currentUser, setCurrentUser] = useState<UserAccount>(DEFAULT_ADMIN);
+  const [isAuthReady, setIsAuthReady] = useState(true);
   const [settings, setSettings] = useState<AppSettings | null>(null);
 
   useEffect(() => {
@@ -124,39 +128,24 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    import('./firebase').then(({ auth, onAuthStateChanged }) => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          setCurrentUser({
-            uid: user.uid,
-            username: user.displayName || user.email || 'User',
-            password: '',
-            role: 'REGULAR',
-            createdAt: new Date(user.metadata.creationTime || Date.now()).getTime()
-          });
-        } else {
-          const saved = localStorage.getItem('tcm_active_session');
-          if (saved) {
-             setCurrentUser(JSON.parse(saved));
-          } else {
-             setCurrentUser(null);
-          }
-        }
-        setIsAuthReady(true);
-      });
-      return () => unsubscribe();
-    }).catch(() => {
-      // Fallback if firebase fails to load
-      const saved = localStorage.getItem('tcm_active_session');
-      if (saved) setCurrentUser(JSON.parse(saved));
-      setIsAuthReady(true);
-    });
+    // Simply mark auth as ready since we are bypassing login
+    setIsAuthReady(true);
   }, []);
 
 
-  const [activePanel, setActivePanel] = useState<'chat' | 'diagnosis' | 'wuxing' | 'ukom' | 'archive' | 'atlas' | 'invoice' | 'bmi'>('chat');
+  const [activePanel, setActivePanel] = useState<'chat' | 'diagnosis' | 'wuxing' | 'wuxing-education' | 'ukom' | 'patients' | 'atlas' | 'invoice' | 'bmi' | 'acupuncture'>('chat');
   const [appLanguage, setAppLanguage] = useState<Language>(Language.INDONESIAN);
   
+  const [showConsent, setShowConsent] = useState(true);
+  const [showPrivacy, setShowPrivacy] = useState(false);
+
+  useEffect(() => {
+    const consentAccepted = localStorage.getItem('consent_accepted');
+    if (consentAccepted === 'true') {
+      setShowConsent(false);
+    }
+  }, []);
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     { id: 'welcome', role: 'model', text: 'Sistem Siap. Masukkan keluhan pasien untuk analisis cepat atau gunakan Form Input Pasien.', timestamp: new Date() }
   ]);
@@ -295,14 +284,7 @@ const App: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    setCurrentUser(null);
-    localStorage.removeItem('tcm_active_session');
-    try {
-      const { auth } = await import('./firebase');
-      await auth.signOut();
-    } catch (e) {
-      console.error("Logout error:", e);
-    }
+    // No-op for bypassed auth
     window.location.reload();
   };
 
@@ -314,7 +296,8 @@ const App: React.FC = () => {
     );
   }
 
-  if (!currentUser) return <LoginScreen onLoginSuccess={setCurrentUser} />;
+  // Removed LoginScreen check
+  // if (!currentUser) return <LoginScreen onLoginSuccess={setCurrentUser} />;
 
   const SidebarTab = ({ id, label, icon: Icon }: { id: typeof activePanel, label: string, icon: any }) => {
     const isActive = activePanel === id;
@@ -355,8 +338,9 @@ const App: React.FC = () => {
            <SidebarTab id="diagnosis" label="CDSS Auto-Rx" icon={Stethoscope} />
            <SidebarTab id="atlas" label="Atlas Sindrom" icon={LayoutGrid} />
            <SidebarTab id="wuxing" label="Wu Xing Master" icon={Compass} />
+           <SidebarTab id="wuxing-education" label="Wu Xing Masterclass" icon={Zap} />
            <SidebarTab id="acupuncture" label="Acupuncture Atlas" icon={Zap} />
-           <SidebarTab id="archive" label={appLanguage === Language.ENGLISH ? "Patient Archive" : "Arsip Pasien"} icon={Archive} />
+           <SidebarTab id="patients" label={appLanguage === Language.ENGLISH ? "Patient Dashboard" : "Dashboard Pasien"} icon={User} />
            <SidebarTab id="invoice" label="Invoice Generator" icon={ClipboardList} />
            <SidebarTab id="bmi" label="BMI Komplit" icon={Scale} />
         </nav>
@@ -532,6 +516,7 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
+          {activePanel === 'wuxing-education' && <WuXingEducationPage />}
           {activePanel === 'acupuncture' && (
             <div className="max-w-6xl mx-auto animate-fade-in">
               <div className="flex items-center justify-between mb-8">
@@ -548,15 +533,7 @@ const App: React.FC = () => {
               <AcupuncturePointsPanel />
             </div>
           )}
-          {activePanel === 'archive' && (
-            <PatientArchivePanel 
-              onLoadPatient={(p) => { 
-                setLastPatientForm(p);
-                setCdssResults([{syndrome: p.diagnosis as any, score: 100, points: [], warnings: [], rationale: [p.diagnosis.explanation]}]); 
-                setActivePanel('chat'); 
-              }} 
-            />
-          )}
+          {activePanel === 'patients' && <PatientDashboard />}
           {activePanel === 'invoice' && <InvoiceGeneratorPanel settings={settings} />}
           {activePanel === 'bmi' && <BMIKomplitPanel />}
         </main>
@@ -578,11 +555,11 @@ const App: React.FC = () => {
             <span className="text-[10px] font-black uppercase tracking-tighter">CDSS</span>
           </button>
           <button 
-            onClick={() => setActivePanel('archive')} 
-            className={`flex flex-col items-center gap-1 ${activePanel === 'archive' ? 'text-purple-600' : 'text-purple-300'}`}
+            onClick={() => setActivePanel('patients')} 
+            className={`flex flex-col items-center gap-1 ${activePanel === 'patients' ? 'text-purple-600' : 'text-purple-300'}`}
           >
-            <Archive className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Arsip</span>
+            <User className="w-6 h-6" />
+            <span className="text-[10px] font-black uppercase tracking-tighter">Pasien</span>
           </button>
           <button 
             onClick={() => setIsSidebarOpen(true)} 
