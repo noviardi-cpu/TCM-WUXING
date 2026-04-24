@@ -270,7 +270,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
         <div className="flex items-center justify-between p-6 border-b border-purple-100 sticky top-0 bg-white/90 backdrop-blur-sm z-20">
           <div className="flex items-center gap-2">
              <Activity className="w-5 h-5 text-tcm-primary" />
-             <h2 className="text-xl font-black text-purple-950 uppercase tracking-tighter">Clinical Intake</h2>
+             <h2 className="text-xl font-black text-purple-950 uppercase tracking-tighter">Data Pasien Baru</h2>
           </div>
           <div className="flex items-center gap-3">
             <button 
@@ -278,7 +278,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                 onClick={() => setShowLookup(!showLookup)}
                 className="flex items-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-xl text-xs font-black transition-all border border-purple-200 shadow-sm"
             >
-                <Search className="w-3.5 h-3.5" /> {showLookup ? 'CLOSE' : 'LOOKUP'}
+                <Search className="w-3.5 h-3.5" /> {showLookup ? 'TUTUP' : 'CARI'}
             </button>
             <button onClick={onClose} className="text-purple-400 hover:text-purple-600 transition-colors">
                 <X className="w-6 h-6" />
@@ -292,7 +292,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                     <input 
                         type="text" 
-                        placeholder="Search existing patients..."
+                        placeholder="Cari data pasien..."
                         className="w-full bg-white border border-purple-200 rounded-xl py-3 pl-10 pr-4 text-sm text-purple-900 focus:border-tcm-primary outline-none shadow-inner"
                         value={lookupSearch}
                         onChange={(e) => setLookupSearch(e.target.value)}
@@ -325,10 +325,10 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
         <form onSubmit={handleSubmit} className="p-8 space-y-10">
             {/* Identity Section */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">I. Identity</h3>
+              <h3 className="text-[10px] font-black text-purple-600 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">I. Identitas</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Full Name</label>
+                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Nama Lengkap</label>
                       <div className="relative">
                         <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                         <input 
@@ -336,14 +336,14 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                             className="w-full bg-purple-50/50 border border-purple-200 rounded-xl pl-10 pr-3 py-3 text-purple-900 focus:border-tcm-primary focus:bg-white outline-none transition-all shadow-inner"
                             value={formData.patientName}
                             onChange={e => setFormData({...formData, patientName: e.target.value})}
-                            placeholder="Patient name"
+                            placeholder="Nama Lengkap Pasien"
                             required
                         />
                       </div>
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     <div>
-                        <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Age</label>
+                        <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Usia</label>
                         <input 
                             type="number" 
                             className="w-full bg-purple-50/50 border border-purple-200 rounded-xl px-3 py-3 text-purple-900 focus:border-tcm-primary focus:bg-white outline-none shadow-inner"
@@ -352,21 +352,21 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                         />
                     </div>
                     <div>
-                        <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Sex</label>
+                        <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Jenis Kelamin</label>
                         <select 
                             className="w-full bg-purple-50/50 border border-purple-200 rounded-xl px-3 py-3 text-purple-900 focus:border-tcm-primary focus:bg-white outline-none shadow-inner"
                             value={formData.sex}
                             onChange={e => setFormData({...formData, sex: e.target.value})}
                         >
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
+                            <option value="male">Laki-laki</option>
+                            <option value="female">Perempuan</option>
                         </select>
                     </div>
                   </div>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Phone Number</label>
+                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Nomor Telepon</label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                         <input 
@@ -379,7 +379,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                       </div>
                   </div>
                   <div>
-                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Email Address</label>
+                      <label className="block text-[10px] font-black text-purple-400 uppercase mb-1 ml-1 tracking-widest">Alamat Email</label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                         <input 
@@ -407,7 +407,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
             {/* Tongue Diagnosis - Detailed */}
             <div className="space-y-4">
               <div className="flex items-center justify-between border-b border-purple-100 pb-2">
-                <h3 className="text-[10px] font-black text-tcm-primary uppercase tracking-[0.3em]">II. Tongue Diagnosis Details</h3>
+                <h3 className="text-[10px] font-black text-tcm-primary uppercase tracking-[0.3em]">II. Detail Observasi Lidah</h3>
                 <div className="flex items-center gap-2">
                   <input 
                     type="file" 
@@ -423,9 +423,9 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                     className="flex items-center gap-2 px-3 py-1.5 bg-tcm-primary/10 text-tcm-primary rounded-lg text-[9px] font-black hover:bg-tcm-primary/20 transition-all border border-tcm-primary/20 disabled:opacity-50"
                   >
                     {isAnalyzingTongue ? (
-                      <><Loader2 className="w-3 h-3 animate-spin" /> ANALYZING...</>
+                      <><Loader2 className="w-3 h-3 animate-spin" /> MENGANALISIS...</>
                     ) : (
-                      <><Camera className="w-3 h-3" /> SCAN TONGUE AI</>
+                      <><Camera className="w-3 h-3" /> PINDAI LIDAH AI</>
                     )}
                   </button>
                 </div>
@@ -433,7 +433,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                  <div>
-                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Body Color</label>
+                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Warna Badan Lidah (Body Color)</label>
                     <div className="space-y-2">
                        {TONGUE_BODY_COLORS.map(color => (
                          <button 
@@ -452,10 +452,10 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                  </div>
 
                  <div>
-                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Coat Properties</label>
+                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Sifat Sabur (Coat Properties)</label>
                     <div className="space-y-4">
                        <div>
-                          <span className="block text-[8px] font-black text-purple-300 uppercase mb-2">Color</span>
+                          <span className="block text-[8px] font-black text-purple-300 uppercase mb-2">Warna (Color)</span>
                           <select 
                              className="w-full bg-purple-50/50 border border-purple-200 rounded-xl px-3 py-2 text-xs text-purple-900 outline-none focus:border-tcm-primary focus:bg-white transition-all shadow-inner"
                              value={formData.tongue.coating_color}
@@ -465,7 +465,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                           </select>
                        </div>
                        <div>
-                          <span className="block text-[8px] font-black text-purple-300 uppercase mb-2">Quality</span>
+                          <span className="block text-[8px] font-black text-purple-300 uppercase mb-2">Kualitas (Quality)</span>
                           <select 
                              className="w-full bg-purple-50/50 border border-purple-200 rounded-xl px-3 py-2 text-xs text-purple-900 outline-none focus:border-tcm-primary focus:bg-white transition-all shadow-inner"
                              value={formData.tongue.coating_quality}
@@ -478,7 +478,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
                  </div>
 
                  <div>
-                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Special Features</label>
+                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Fitur Khusus (Special Features)</label>
                     <div className="flex flex-wrap gap-2 overflow-y-auto max-h-[180px] pr-2 scrollbar-hide">
                        {TONGUE_FEATURES.map(feat => (
                          <button 
@@ -500,7 +500,7 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
 
             {/* Pulse Diagnosis */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">III. Pulse Diagnosis</h3>
+              <h3 className="text-[10px] font-black text-amber-500 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">III. Pemeriksaan Nadi (Pulse)</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                  {PULSE_QUALITIES.map(q => (
                     <button 
@@ -520,20 +520,20 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
 
             {/* Complaints & Detailed History */}
             <div className="space-y-4">
-              <h3 className="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">IV. Clinical Complaints</h3>
+              <h3 className="text-[10px] font-black text-rose-500 uppercase tracking-[0.3em] border-b border-purple-100 pb-2">IV. Keluhan Klinis (Complaints)</h3>
               <div className="space-y-4">
                  <div>
-                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Chief Complaint</label>
+                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Keluhan Utama (Chief Complaint)</label>
                     <textarea 
                        className="w-full bg-purple-50/50 border border-purple-200 rounded-2xl px-5 py-4 text-sm text-purple-900 focus:border-tcm-primary focus:bg-white outline-none h-24 resize-none shadow-inner transition-all"
                        value={formData.complaint}
                        onChange={e => setFormData({...formData, complaint: e.target.value})}
-                       placeholder="What is the patient's main concern?"
+                       placeholder="Apa keluhan utama pasien? Deskripsikan secara detail..."
                     />
                  </div>
                  
                  <div>
-                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Symptom Checklist</label>
+                    <label className="block text-[10px] font-black text-purple-400 uppercase mb-2 ml-1 tracking-widest">Daftar Gejala (Symptom Checklist)</label>
                     <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-hide">
                        {SYMPTOM_GROUPS.map(group => (
                          <div key={group.category} className="space-y-2">
@@ -562,9 +562,9 @@ const PatientFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit, settings
 
             {/* Footer Actions */}
             <div className="pt-6 flex justify-end gap-4 border-t border-purple-100 sticky bottom-0 bg-white/90 backdrop-blur-sm py-6 z-10">
-                <button type="button" onClick={onClose} className="px-6 py-3 rounded-2xl text-purple-400 hover:text-purple-600 text-xs font-black uppercase tracking-widest transition-all">Cancel</button>
+                <button type="button" onClick={onClose} className="px-6 py-3 rounded-2xl text-purple-400 hover:text-purple-600 text-xs font-black uppercase tracking-widest transition-all">Batal</button>
                 <button type="submit" className="flex items-center gap-2 bg-gradient-to-r from-fuchsia-500 to-tcm-primary text-white px-10 py-4 rounded-2xl font-black shadow-xl shadow-purple-900/20 text-xs uppercase tracking-widest transition-all active:scale-95 hover:brightness-110">
-                    <Save className="w-5 h-5" /> Start AI Analysis
+                    <Save className="w-5 h-5" /> Mulai Analisis AI
                 </button>
             </div>
         </form>
