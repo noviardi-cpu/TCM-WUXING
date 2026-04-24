@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect, Component, ErrorInfo, ReactNode } from 'react';
-import { Send, Activity, MessageSquare, Stethoscope, Archive, Compass, GraduationCap, Shield, LogOut, ClipboardList, Loader2, Menu, X, Globe, User, LayoutGrid, Scale, Paperclip, Image as ImageIcon, Zap, ChevronDown, ChevronRight, AlertCircle } from 'lucide-react';
+import { Send, Activity, MessageSquare, Stethoscope, Archive, Compass, GraduationCap, Shield, ClipboardList, Loader2, Menu, X, Globe, User, LayoutGrid, Scale, Paperclip, Image as ImageIcon, Zap, ChevronDown, ChevronRight, AlertCircle } from 'lucide-react';
 import { Language, ChatMessage, ScoredSyndrome, UserAccount, TcmDiagnosisResult, AppSettings } from './types';
 import { sendMessageToGeminiStream } from './services/geminiService';
 import { analyzePatient } from './services/tcmLogic';
@@ -283,11 +283,6 @@ const App: React.FC = () => {
     setActivePanel('diagnosis');
   };
 
-  const handleLogout = async () => {
-    // No-op for bypassed auth
-    window.location.reload();
-  };
-
   if (!isAuthReady) {
     return (
       <div className="min-h-screen bg-purple-50 flex items-center justify-center">
@@ -355,12 +350,6 @@ const App: React.FC = () => {
            )}
            <button onClick={() => setIsFormOpen(true)} className="w-full py-3.5 bg-purple-600 text-white rounded-xl font-bold text-xs uppercase tracking-wider hover:bg-purple-700 transition-all shadow-md shadow-purple-100 active:scale-95 flex items-center justify-center gap-2">
              <ClipboardList className="w-4 h-4" /> {appLanguage === Language.ENGLISH ? "New Patient Intake" : "Input Pasien Baru"}
-           </button>
-           <button 
-             onClick={handleLogout}
-             className="w-full py-3 bg-rose-50 text-rose-600 border border-rose-100 rounded-xl font-bold text-[11px] uppercase tracking-wider hover:bg-rose-100 transition-all flex items-center justify-center gap-2"
-           >
-             <LogOut className="w-4 h-4" /> Logout
            </button>
         </div>
       </div>
@@ -599,7 +588,6 @@ const App: React.FC = () => {
           <UserManagementModal 
             isOpen={isUserModalOpen} 
             onClose={() => setIsUserModalOpen(false)} 
-            onLogout={handleLogout}
             currentUser={currentUser} 
           />
         )}

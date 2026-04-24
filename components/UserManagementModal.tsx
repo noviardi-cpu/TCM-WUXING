@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, UserPlus, Trash2, Shield, User, AlertCircle, Save, Settings, Database, Key, MapPin, Phone, LogOut, Zap } from 'lucide-react';
+import { X, UserPlus, Trash2, Shield, User, AlertCircle, Save, Settings, Database, Key, MapPin, Phone, Zap } from 'lucide-react';
 import { UserAccount, AppSettings, ApiKeyEntry } from '../types';
 import { db } from '../services/db';
 import { collection, query, onSnapshot } from 'firebase/firestore';
@@ -10,11 +10,10 @@ import { updatePassword } from 'firebase/auth';
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onLogout: () => void;
   currentUser: UserAccount;
 }
 
-const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, currentUser }) => {
+const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, currentUser }) => {
   const [activeTab, setActiveTab] = useState<'users' | 'settings' | 'profile'>('users');
   const [users, setUsers] = useState<UserAccount[]>([]);
   const [newUsername, setNewUsername] = useState('');
@@ -581,12 +580,6 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
                       <p className="text-sm font-bold text-purple-900">{roleLabels[currentUser.role]}</p>
                     </div>
                   </div>
-                  <button 
-                    onClick={onLogout}
-                    className="w-full py-3 bg-purple-100 text-purple-600 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-purple-200 transition-all flex items-center justify-center gap-2"
-                  >
-                    <LogOut className="w-4 h-4" /> Logout dari Sesi
-                  </button>
                 </div>
 
                 <div className="bg-purple-50 p-6 rounded-2xl border border-purple-100 space-y-4">
