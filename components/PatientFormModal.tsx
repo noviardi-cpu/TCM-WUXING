@@ -35,14 +35,14 @@ interface PatientData {
   };
 }
 
-const TONGUE_BODY_COLORS = ['Normal (Pink)', 'Pale', 'Red', 'Deep Red', 'Purple/Bluish', 'Orange-Red (Heat)'];
-const TONGUE_COAT_COLORS = ['White', 'Yellow', 'Grey', 'Black', 'None (Rootless)'];
-const TONGUE_COAT_QUALITIES = ['Thin', 'Thick', 'Dry', 'Wet/Moist', 'Greasy/Sticky', 'Peeled/Map', 'Curdy'];
-const TONGUE_FEATURES = ['Teeth Marks', 'Cracks (Center)', 'Cracks (Sides)', 'Red Points/Spots', 'Swollen', 'Deviated', 'Short/Contracted', 'Quivering', 'Ulcerated'];
+const TONGUE_BODY_COLORS = ['Normal', 'Pucat', 'Merah', 'Sangat Merah', 'Keunguan', 'Merah Jingga'];
+const TONGUE_COAT_COLORS = ['Putih', 'Kuning', 'Abu-abu', 'Hitam', 'Tidak Ada (Rootless)'];
+const TONGUE_COAT_QUALITIES = ['Tipis', 'Tebal', 'Kering', 'Basah/Lembab', 'Berminyak/Lengket', 'Terkelupas/Peta', 'Seperti Dadih'];
+const TONGUE_FEATURES = ['Bekas Gigi', 'Retak (Tengah)', 'Retak (Samping)', 'Bintik Merah', 'Bengkak', 'Miring', 'Pendek/Mengerut', 'Gemetar', 'Sariawan'];
 
 const PULSE_QUALITIES = [
-  'Floating', 'Deep', 'Slow', 'Rapid', 'Empty/Deficient', 'Full/Excess', 
-  'Slippery', 'Wiry', 'Tight', 'Thready/Fine', 'Knotted', 'Intermittent', 'Choppy', 'Hasty'
+  'Mengambang (Floating)', 'Tenggelam (Deep)', 'Lambat (Slow)', 'Cepat (Rapid)', 'Kosong/Defisien', 'Penuh/Ekses', 
+  'Licin (Slippery)', 'Tegang (Wiry)', 'Kuat (Tight)', 'Halus (Thready/Fine)', 'Berikat (Knotted)', 'Terputus (Intermittent)', 'Kasar (Choppy)', 'Terburu-buru (Hasty)'
 ];
 
 const SYMPTOM_GROUPS = [
