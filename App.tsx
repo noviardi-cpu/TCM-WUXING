@@ -538,49 +538,8 @@ const App: React.FC = () => {
           {activePanel === 'bmi' && <BMIKomplitPanel />}
         </main>
 
-        {/* Mobile Bottom Navigation - Ergonomic for Android */}
-        <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-purple-100 px-6 py-3 flex justify-between items-center z-40 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
-          <button 
-            onClick={() => setActivePanel('chat')} 
-            className={`flex flex-col items-center gap-1 ${activePanel === 'chat' ? 'text-purple-600' : 'text-purple-300'}`}
-          >
-            <MessageSquare className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Chat</span>
-          </button>
-          <button 
-            onClick={() => setActivePanel('diagnosis')} 
-            className={`flex flex-col items-center gap-1 ${activePanel === 'diagnosis' ? 'text-purple-600' : 'text-purple-300'}`}
-          >
-            <Stethoscope className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-tighter">CDSS</span>
-          </button>
-          <button 
-            onClick={() => setActivePanel('patients')} 
-            className={`flex flex-col items-center gap-1 ${activePanel === 'patients' ? 'text-purple-600' : 'text-purple-300'}`}
-          >
-            <User className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Pasien</span>
-          </button>
-          <button 
-            onClick={() => setIsSidebarOpen(true)} 
-            className="flex flex-col items-center gap-1 text-purple-300"
-          >
-            <Menu className="w-6 h-6" />
-            <span className="text-[10px] font-black uppercase tracking-tighter">Menu</span>
-          </button>
-        </div>
-
-        {isUserModalOpen && (
-          <UserManagementModal 
-            isOpen={isUserModalOpen} 
-            onClose={() => setIsUserModalOpen(false)} 
-            onLogout={handleLogout}
-            currentUser={currentUser} 
-          />
-        )}
-
         {activePanel === 'chat' && (
-          <div className="p-4 md:p-6 bg-white/80 backdrop-blur-xl border-t border-purple-100 mb-16 md:mb-0">
+          <div className="p-4 md:p-6 bg-white/80 backdrop-blur-xl border-t border-purple-100 shrink-0">
             <div className="max-w-4xl mx-auto flex flex-col gap-3">
               {selectedFile && (
                 <div className="relative flex items-center gap-3 p-3 bg-purple-50 rounded-xl border border-purple-200 shadow-sm w-fit pr-12">
@@ -635,6 +594,47 @@ const App: React.FC = () => {
               </div>
             </div>
           </div>
+        )}
+
+        {/* Mobile Bottom Navigation - Ergonomic for Android */}
+        <div className="md:hidden bg-white border-t border-purple-100 px-6 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] flex justify-between items-center z-40 shrink-0 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+          <button 
+            onClick={() => setActivePanel('chat')} 
+            className={`flex flex-col items-center gap-1 ${activePanel === 'chat' ? 'text-purple-600' : 'text-purple-300'}`}
+          >
+            <MessageSquare className="w-6 h-6" />
+            <span className="text-[10px] font-black uppercase tracking-tighter">Chat</span>
+          </button>
+          <button 
+            onClick={() => setActivePanel('diagnosis')} 
+            className={`flex flex-col items-center gap-1 ${activePanel === 'diagnosis' ? 'text-purple-600' : 'text-purple-300'}`}
+          >
+            <Stethoscope className="w-6 h-6" />
+            <span className="text-[10px] font-black uppercase tracking-tighter">CDSS</span>
+          </button>
+          <button 
+            onClick={() => setActivePanel('patients')} 
+            className={`flex flex-col items-center gap-1 ${activePanel === 'patients' ? 'text-purple-600' : 'text-purple-300'}`}
+          >
+            <User className="w-6 h-6" />
+            <span className="text-[10px] font-black uppercase tracking-tighter">Pasien</span>
+          </button>
+          <button 
+            onClick={() => setIsSidebarOpen(true)} 
+            className="flex flex-col items-center gap-1 text-purple-300"
+          >
+            <Menu className="w-6 h-6" />
+            <span className="text-[10px] font-black uppercase tracking-tighter">Menu</span>
+          </button>
+        </div>
+
+        {isUserModalOpen && (
+          <UserManagementModal 
+            isOpen={isUserModalOpen} 
+            onClose={() => setIsUserModalOpen(false)} 
+            onLogout={handleLogout}
+            currentUser={currentUser} 
+          />
         )}
       </div>
     </div>

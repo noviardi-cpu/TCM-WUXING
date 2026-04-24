@@ -22,24 +22,18 @@ const PatientArchivePanel: React.FC<Props> = ({ onLoadPatient }) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
-    if (!auth.currentUser) return;
-    const q = query(collection(firestore, 'patients'), where('authorUid', '==', auth.currentUser.uid));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const pts: SavedPatient[] = [];
-      snapshot.forEach((doc) => {
-        pts.push(doc.data() as SavedPatient);
-      });
-      setPatients(pts);
-    }, (error) => {
-      console.error("Error fetching patients:", error);
-    });
-
-    return () => unsubscribe();
+    // Replaced Firebase onSnapshot with our standard db.patients.getAll fallback loader
+    const fetchPatients = async () => {
+      const data = await db.patients.getAll();
+      setPatients(data);
+    };
+    fetchPatients();
   }, []);
 
   const loadPatients = async () => {
     setIsRefreshing(true);
-    // Real-time listener handles the data, just visual feedback here
+    const data = await db.patients.getAll();
+    setPatients(data);
     setTimeout(() => setIsRefreshing(false), 500);
   };
 

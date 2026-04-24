@@ -37,7 +37,6 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
   useEffect(() => {
-    let unsubscribe: any;
     if (isOpen) {
       const fetchData = async () => {
         try {
@@ -56,26 +55,16 @@ const UserManagementModal: React.FC<Props> = ({ isOpen, onClose, onLogout, curre
       
       fetchData();
 
-      try {
-        const q = query(collection(firestore, 'users'));
-        unsubscribe = onSnapshot(q, (snapshot) => {
-          const userData: UserAccount[] = [];
-          snapshot.forEach((doc) => {
-            userData.push(doc.data() as UserAccount);
-          });
+      const loadUsers = async () => {
+        try {
+          const userData = await db.users.getAll();
           setUsers(userData);
-        });
-      } catch (e) {
-        console.warn("Firebase real-time subscription skipped:", e);
-        // Fallback to local
-        db.users.getAll().then(setUsers);
-      }
+        } catch (e) {
+          console.warn("User fetch skipped:", e);
+        }
+      };
+      loadUsers();
     }
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
   }, [isOpen]);
 
   const handleAddUser = async (e: React.FormEvent) => {
