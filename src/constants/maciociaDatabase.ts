@@ -1,4 +1,4 @@
-import { Syndrome } from '../types';
+import { Syndrome } from '../../types';
 
 export const MACIOCIA_SYNDROMES: Syndrome[] = [
   {

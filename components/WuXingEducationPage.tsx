@@ -133,7 +133,7 @@ const QUIZ_QUESTIONS = [
 ];
 
 const WuXingEducationPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'theory' | 'animation' | 'table' | 'cases' | 'quiz'>('animation');
+  const [activeTab, setActiveTab] = useState<'theory' | 'animation' | 'meridian' | 'cases' | 'quiz'>('animation');
   const [activeCycle, setActiveCycle] = useState<'sheng' | 'ke' | 'cheng' | 'wu'>('sheng');
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
@@ -199,11 +199,11 @@ const WuXingEducationPage: React.FC = () => {
         <Zap className="w-10 h-10 text-amber-500" />
         <h1 className="text-3xl md:text-4xl font-black text-purple-950">Wu Xing Masterclass</h1>
       </div>
-      <p className="text-purple-600 text-sm md:text-lg mb-10">Pemahaman Lengkap Lima Unsur – Teori, Animasi, Tabel, dan Latihan Kasus Nyata</p>
+      <p className="text-purple-600 text-sm md:text-lg mb-10">Pemahaman Lengkap Lima Unsur – Teori, Animasi, Analogi, dan Latihan Kasus Nyata</p>
 
       {/* Navigation Tabs */}
       <div className="flex border-b border-purple-200 mb-8 overflow-x-auto scrollbar-hide">
-        {['theory', 'animation', 'table', 'cases', 'quiz'].map((tab) => (
+        {['theory', 'animation', 'meridian', 'cases', 'quiz'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab as any)}
@@ -211,7 +211,7 @@ const WuXingEducationPage: React.FC = () => {
           >
             {tab === 'theory' && 'Teori Dasar'}
             {tab === 'animation' && 'Animasi Siklus'}
-            {tab === 'table' && 'Tabel Interaktif'}
+            {tab === 'meridian' && 'Jelajah Meridian'}
             {tab === 'cases' && 'Latihan Kasus Nyata (15+)'} 
             {tab === 'quiz' && 'Quiz Seru'} 
           </button>
@@ -356,8 +356,8 @@ const WuXingEducationPage: React.FC = () => {
         </div>
       )}
 
-      {/* TABEL LENGKAP TITIK WU XING */}
-      {activeTab === 'table' && (
+      {/* JELAJAH MERIDIAN */}
+      {activeTab === 'meridian' && (
         <div className="animate-fade-in flex flex-col gap-10">
           <div>
             <h3 className="text-2xl font-bold mb-6 text-purple-900 flex items-center gap-2"><BookOpen className="w-6 h-6 text-amber-500" /> Jelajah Meridian (Dongeng 5 Elemen)</h3>
@@ -384,45 +384,7 @@ const WuXingEducationPage: React.FC = () => {
             )}
           </div>
 
-          <div>
-            <h3 className="text-2xl font-bold mb-6 text-purple-900 flex items-center gap-2"><Lightbulb className="w-6 h-6 text-amber-500" /> Tabel Lengkap Titik Wu Xing Spesifik</h3>
-            <div className="overflow-x-auto rounded-2xl border border-purple-200">
-              <table className="w-full text-sm border-collapse bg-white">
-                <thead className="bg-purple-100">
-                <tr>
-                  <th className="p-4 text-left font-black text-purple-900">Meridian</th>
-                  <th className="p-4 text-center font-bold text-emerald-700">Jing Well</th>
-                  <th className="p-4 text-center font-bold text-amber-700">Ying Spring</th>
-                  <th className="p-4 text-center font-bold text-purple-700">Shu Stream</th>
-                  <th className="p-4 text-center font-bold text-blue-700">Jing River</th>
-                  <th className="p-4 text-center font-bold text-rose-700">He Sea</th>
-                  <th className="p-4 text-center font-black text-purple-900">Yuan Source</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-purple-100">
-                <tr className="bg-purple-50/50 uppercase text-[10px] font-black tracking-widest text-emerald-600">
-                  <td colSpan={7} className="p-2 text-center border-b border-purple-100">--- Meridian YIN ---</td>
-                </tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Lung (LU)</td><td className="p-4 text-center">11</td><td className="p-4 text-center">10</td><td className="p-4 text-center">9</td><td className="p-4 text-center">8</td><td className="p-4 text-center">5</td><td className="p-4 text-center font-black text-purple-800">LU 9</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Heart (HT)</td><td className="p-4 text-center">9</td><td className="p-4 text-center">8</td><td className="p-4 text-center">7</td><td className="p-4 text-center">4</td><td className="p-4 text-center">3</td><td className="p-4 text-center font-black text-purple-800">HT 7</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Spleen (SP)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">5</td><td className="p-4 text-center">9</td><td className="p-4 text-center font-black text-purple-800">SP 3</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Kidney (KI)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">7</td><td className="p-4 text-center">10</td><td className="p-4 text-center font-black text-purple-800">KI 3</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Liver (LR)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">4</td><td className="p-4 text-center">8</td><td className="p-4 text-center font-black text-purple-800">LR 3</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Pericardium (PC)</td><td className="p-4 text-center">9</td><td className="p-4 text-center">8</td><td className="p-4 text-center">7</td><td className="p-4 text-center">5</td><td className="p-4 text-center">3</td><td className="p-4 text-center font-black text-purple-800">PC 7</td></tr>
-                
-                <tr className="bg-purple-50/50 uppercase text-[10px] font-black tracking-widest text-amber-600">
-                  <td colSpan={7} className="p-2 text-center border-y border-purple-100">--- Meridian YANG ---</td>
-                </tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Large Intestine (LI)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">5</td><td className="p-4 text-center">11</td><td className="p-4 text-center font-black text-purple-800">LI 4</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Stomach (ST)</td><td className="p-4 text-center">45</td><td className="p-4 text-center">44</td><td className="p-4 text-center">43</td><td className="p-4 text-center">41</td><td className="p-4 text-center">36</td><td className="p-4 text-center font-black text-purple-800">ST 42</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Small Intestine (SI)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">5</td><td className="p-4 text-center">8</td><td className="p-4 text-center font-black text-purple-800">SI 4</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Bladder (BL)</td><td className="p-4 text-center">67</td><td className="p-4 text-center">66</td><td className="p-4 text-center">65</td><td className="p-4 text-center">60</td><td className="p-4 text-center">40</td><td className="p-4 text-center font-black text-purple-800">BL 64</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">Gallbladder (GB)</td><td className="p-4 text-center">44</td><td className="p-4 text-center">43</td><td className="p-4 text-center">41</td><td className="p-4 text-center">38</td><td className="p-4 text-center">34</td><td className="p-4 text-center font-black text-purple-800">GB 40</td></tr>
-                <tr className="hover:bg-purple-50 transition-colors"><td className="p-4 font-semibold text-purple-900">San Jiao (TE)</td><td className="p-4 text-center">1</td><td className="p-4 text-center">2</td><td className="p-4 text-center">3</td><td className="p-4 text-center">6</td><td className="p-4 text-center">10</td><td className="p-4 text-center font-black text-purple-800">TE 4</td></tr>
-              </tbody>
-            </table>
-            </div>
-          </div>
+
         </div>
       )}
 

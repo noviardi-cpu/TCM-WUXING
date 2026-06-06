@@ -238,13 +238,31 @@ const App: React.FC = () => {
     } catch (error: any) {
       console.error("Chat Error:", error);
       let errorMsg = appLanguage === Language.ENGLISH ? "Failed to process data. Please check your API connection." : "Gagal memproses data. Mohon periksa koneksi API Anda.";
+      let code: 'API_FULL' | 'TIMEOUT' | 'NETWORK_ERROR' | 'UNKNOWN' = 'UNKNOWN';
       
-      // If the error message is informative, show it
-      if (error.message && !error.message.includes("429") && !error.message.includes("quota")) {
-        errorMsg = error.message;
+      if (error.message) {
+        const msgLower = error.message.toLowerCase();
+        if (msgLower.includes("429") || msgLower.includes("quota")) {
+          code = 'API_FULL';
+          errorMsg = appLanguage === Language.ENGLISH 
+            ? "API Quota Full / Too many requests. Please wait a minute and try again." 
+            : "Kuota AI Penuh / Terlalu banyak permintaan. Silakan tunggu 1-2 menit dan coba lagi.";
+        } else if (msgLower.includes("timeout") || msgLower.includes("aborted")) {
+          code = 'TIMEOUT';
+          errorMsg = appLanguage === Language.ENGLISH
+            ? "Request Timed Out. The server took too long to respond."
+            : "Request Timeout. Server terlalu lama merespons.";
+        } else if (msgLower.includes("network") || msgLower.includes("fetch")) {
+          code = 'NETWORK_ERROR';
+          errorMsg = appLanguage === Language.ENGLISH
+            ? "Network Error. Please check your internet connection."
+            : "Kesalahan Jaringan. Periksa koneksi internet Anda.";
+        } else {
+          errorMsg = error.message;
+        }
       }
       
-      setMessages(prev => prev.map(m => m.id === botMsgId ? { ...m, text: errorMsg, isError: true } : m));
+      setMessages(prev => prev.map(m => m.id === botMsgId ? { ...m, text: errorMsg, isError: true, errorCode: code } : m));
     } finally {
       setIsLoading(false);
     }
@@ -402,7 +420,13 @@ const App: React.FC = () => {
               {messages.map(msg => (
                 <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
                   <div className="max-w-[95%] md:max-w-[85%]">
-                    <div className={`p-5 rounded-3xl text-sm leading-relaxed shadow-lg ${msg.role === 'user' ? 'bg-purple-600 text-white rounded-tr-none' : 'bg-white border border-purple-100 text-purple-900 rounded-tl-none'}`}>
+                    <div className={`p-5 rounded-3xl text-sm leading-relaxed shadow-lg flex flex-col gap-2 ${msg.role === 'user' ? 'bg-purple-600 text-white rounded-tr-none' : 'bg-white border border-purple-100 text-purple-900 rounded-tl-none'} ${msg.isError ? '!bg-red-50 !border-red-200 !text-red-900' : ''}`}>
+                      {msg.isError && msg.errorCode && msg.errorCode !== 'UNKNOWN' && (
+                         <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-red-600 bg-red-100/50 w-fit px-3 py-1.5 rounded-lg border border-red-200 mb-1">
+                           <AlertCircle className="w-4 h-4" /> 
+                           {msg.errorCode === 'API_FULL' ? 'API FULL' : msg.errorCode === 'TIMEOUT' ? 'TIMEOUT' : msg.errorCode === 'NETWORK_ERROR' ? 'NETWORK ERROR' : 'ERROR'}
+                         </div>
+                      )}
                       {msg.image && (
                         <div className="mb-3">
                           {msg.image.startsWith('data:image/') ? (

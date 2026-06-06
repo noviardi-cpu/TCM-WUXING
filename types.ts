@@ -119,6 +119,7 @@ export interface ChatMessage {
   text: string;
   timestamp: Date;
   isError?: boolean;
+  errorCode?: 'API_FULL' | 'TIMEOUT' | 'NETWORK_ERROR' | 'UNKNOWN';
   tcmResult?: TcmDiagnosisResult;
   image?: string;
 }

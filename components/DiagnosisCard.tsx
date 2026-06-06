@@ -238,156 +238,6 @@ ${diagnosis.lifestyleAdvice}
           </div>
         </div>
 
-        {/* TABEL LENGKAP WU XING POINTS (BARU) */}
-        <div className="mb-8 border border-purple-200 rounded-3xl p-6 bg-white">
-          <div className="flex items-center justify-between mb-5">
-            <h4 className="font-black text-purple-700 text-lg flex items-center gap-2">
-              <Activity className="w-5 h-5" />
-              Tabel Lengkap Titik Wu Xing Spesifik
-            </h4>
-            <span className="text-xs bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium">Berdasarkan PDF 2020</span>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs border-collapse">
-              <thead>
-                <tr className="bg-purple-100">
-                  <th className="p-3 text-left font-bold text-purple-700">Meridian</th>
-                  <th className="p-3 text-center font-bold text-emerald-600">Jing Well</th>
-                  <th className="p-3 text-center font-bold text-amber-600">Ying Spring</th>
-                  <th className="p-3 text-center font-bold text-purple-600">Shu Stream</th>
-                  <th className="p-3 text-center font-bold text-blue-600">Jing River</th>
-                  <th className="p-3 text-center font-bold text-rose-600">He Sea</th>
-                  <th className="p-3 text-center font-bold">Yuan Source</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {/* Yin Meridians */}
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">LU (Lung)</td>
-                  <td className="p-3 text-center">11</td>
-                  <td className="p-3 text-center">10</td>
-                  <td className="p-3 text-center">9</td>
-                  <td className="p-3 text-center">8</td>
-                  <td className="p-3 text-center">5</td>
-                  <td className="p-3 text-center font-bold">LU 9</td>
-                </tr>
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">PC (Pericardium)</td>
-                  <td className="p-3 text-center">9</td>
-                  <td className="p-3 text-center">8</td>
-                  <td className="p-3 text-center">7</td>
-                  <td className="p-3 text-center">5</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center font-bold">PC 7</td>
-                </tr>
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">HT (Heart)</td>
-                  <td className="p-3 text-center">9</td>
-                  <td className="p-3 text-center">8</td>
-                  <td className="p-3 text-center">7</td>
-                  <td className="p-3 text-center">4</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center font-bold">HT 7</td>
-                </tr>
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">SP (Spleen)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">5</td>
-                  <td className="p-3 text-center">9</td>
-                  <td className="p-3 text-center font-bold">SP 3</td>
-                </tr>
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">KI (Kidney)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">7</td>
-                  <td className="p-3 text-center">10</td>
-                  <td className="p-3 text-center font-bold">KI 3</td>
-                </tr>
-                <tr className="bg-emerald-50">
-                  <td className="p-3 font-semibold">LR (Liver)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">4</td>
-                  <td className="p-3 text-center">8</td>
-                  <td className="p-3 text-center font-bold">LR 3</td>
-                </tr>
-
-                {/* Yang Meridians */}
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">LI (Large Intestine)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">5</td>
-                  <td className="p-3 text-center">11</td>
-                  <td className="p-3 text-center font-bold">LI 4</td>
-                </tr>
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">ST (Stomach)</td>
-                  <td className="p-3 text-center">45</td>
-                  <td className="p-3 text-center">44</td>
-                  <td className="p-3 text-center">43</td>
-                  <td className="p-3 text-center">41</td>
-                  <td className="p-3 text-center">36</td>
-                  <td className="p-3 text-center font-bold">ST 42</td>
-                </tr>
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">SI (Small Intestine)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">5</td>
-                  <td className="p-3 text-center">8</td>
-                  <td className="p-3 text-center font-bold">SI 4</td>
-                </tr>
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">TE (Triple Energizer)</td>
-                  <td className="p-3 text-center">1</td>
-                  <td className="p-3 text-center">2</td>
-                  <td className="p-3 text-center">3</td>
-                  <td className="p-3 text-center">6</td>
-                  <td className="p-3 text-center">10</td>
-                  <td className="p-3 text-center font-bold">TE 4</td>
-                </tr>
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">GB (Gallbladder)</td>
-                  <td className="p-3 text-center">44</td>
-                  <td className="p-3 text-center">43</td>
-                  <td className="p-3 text-center">41</td>
-                  <td className="p-3 text-center">38</td>
-                  <td className="p-3 text-center">34</td>
-                  <td className="p-3 text-center font-bold">GB 40</td>
-                </tr>
-                <tr className="bg-amber-50">
-                  <td className="p-3 font-semibold">BL (Bladder)</td>
-                  <td className="p-3 text-center">67</td>
-                  <td className="p-3 text-center">66</td>
-                  <td className="p-3 text-center">65</td>
-                  <td className="p-3 text-center">60</td>
-                  <td className="p-3 text-center">40</td>
-                  <td className="p-3 text-center font-bold">BL 64</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div className="mt-6 text-xs flex items-center gap-6 text-purple-500">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-yellow-300 rounded"></div>
-              <span>Titik Ibu = Tonik</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-purple-300 rounded"></div>
-              <span>Titik Anak = Sedasi</span>
-            </div>
-          </div>
-        </div>
 
         {/* QR CODE SECTION */}
         <div className="flex justify-end mb-6 print:hidden">
@@ -431,13 +281,12 @@ ${diagnosis.lifestyleAdvice}
             className="flex items-center gap-2 px-6 py-3 bg-purple-600 text-white rounded-2xl font-bold text-sm hover:bg-purple-700 transition-all"
           >
             <Printer className="w-4 h-4" />
-            Cetak Langsung
+            Print
           </button>
         </div>
 
         {/* DETAIL BIAN ZHENG LENGKAP */}
-        {showFullBianZheng && (
-          <div className="space-y-8 border border-purple-100 rounded-3xl p-6 bg-purple-50/70 mb-8 print:bg-white print:border-none print:p-0 print:mb-6">
+        <div className={`${showFullBianZheng ? 'block' : 'hidden print:block'} space-y-8 border border-purple-100 rounded-3xl p-6 bg-purple-50/70 mb-8 print:bg-white print:border-none print:p-0 print:mb-6`}>
 
         {/* KEY SYMPTOMS + TONGUE & PULSE */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -637,12 +486,11 @@ ${diagnosis.lifestyleAdvice}
            </div>
         </div>
         </div>
-        )}
 
         {/* Tombol Export & Share */}
         <div className="flex justify-end gap-3 print:hidden mt-6">
           <button onClick={handlePrint} className="px-6 py-3 bg-purple-600 text-white rounded-2xl flex items-center gap-2 text-sm font-bold shadow-md hover:bg-purple-700 transition-colors">
-            <Printer className="w-4 h-4" /> Cetak Langsung
+            <Printer className="w-4 h-4" /> Print
           </button>
           <button onClick={handleCopy} className="px-6 py-3 text-purple-600 border border-purple-200 rounded-2xl hover:bg-purple-50 flex items-center gap-2 text-sm font-bold shadow-sm transition-colors">
             <Copy className="w-4 h-4" /> Copy
