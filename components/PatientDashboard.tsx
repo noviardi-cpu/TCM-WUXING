@@ -30,6 +30,7 @@ const PatientDashboard: React.FC = () => {
 
   const filteredPatients = patients.filter(p =>
     p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    p.phone?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     p.diagnosis?.patternId?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -74,7 +75,7 @@ const PatientDashboard: React.FC = () => {
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-purple-300 group-focus-within:text-purple-500 transition-colors" />
           <input
             type="text"
-            placeholder="Cari nama pasien atau diagnosis..."
+            placeholder="Cari nama pasien, no telp, atau diagnosis..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-14 pr-6 py-4 bg-white border-2 border-purple-100 rounded-[2rem] focus:outline-none focus:border-purple-400 focus:bg-purple-50/30 transition-all font-medium text-purple-900"
