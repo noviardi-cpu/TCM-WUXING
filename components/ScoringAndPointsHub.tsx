@@ -81,7 +81,7 @@ const ScoringAndPointsHub: React.FC<Props> = ({ analysis, onAnalyzeRequest, init
   } : null;
 
   return (
-    <div className="flex h-full p-4 gap-4 print:p-0">
+    <div className="flex flex-col md:flex-row md:h-[calc(100vh-140px)] min-h-[600px] p-2 md:p-4 gap-4 print:p-0 print:h-auto print:min-h-0">
       {diagnosisForModal && showNoteModal && (
           <DoctorNoteModal 
             isOpen={showNoteModal} 
@@ -92,7 +92,7 @@ const ScoringAndPointsHub: React.FC<Props> = ({ analysis, onAnalyzeRequest, init
       )}
 
       {/* List Analysis */}
-      <div className="w-1/3 min-h-full bg-white border border-purple-100 rounded-3xl p-5 shadow-xl flex flex-col">
+      <div className="md:w-1/3 w-full shrink-0 h-[300px] md:h-full bg-white border border-purple-100 rounded-3xl p-5 shadow-xl flex flex-col relative">
         <h2 className="text-lg font-black text-purple-950 uppercase tracking-tighter mb-4 flex items-center gap-2">
             <Activity className="w-5 h-5 text-tcm-primary" /> Analisis CDSS
         </h2>
@@ -121,9 +121,9 @@ const ScoringAndPointsHub: React.FC<Props> = ({ analysis, onAnalyzeRequest, init
       </div>
 
       {/* Detail & Map */}
-      <div ref={contentRef} className="flex-1 bg-white border border-purple-100 rounded-3xl p-6 shadow-xl flex flex-col relative overflow-hidden">
+      <div ref={contentRef} className="flex-1 bg-white border border-purple-100 rounded-3xl p-6 shadow-xl flex flex-col relative overflow-y-auto h-full">
         {selectedSyndrome ? (
-          <>
+          <div className="pb-8">
             <div className="flex justify-between items-start mb-6">
                 <div>
                    <h3 className="text-2xl font-black text-purple-950 tracking-tighter">{selectedSyndrome.syndrome.name_id}</h3>
@@ -136,12 +136,12 @@ const ScoringAndPointsHub: React.FC<Props> = ({ analysis, onAnalyzeRequest, init
                 </div>
             </div>
 
-            <div className="flex-1 grid grid-cols-2 gap-6 min-h-0">
-               <div className="bg-purple-50/50 border border-purple-100 rounded-3xl overflow-hidden relative shadow-inner">
+            <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6">
+               <div className="bg-purple-50/50 border border-purple-100 rounded-3xl overflow-hidden relative shadow-inner min-h-[400px]">
                   <BodyMapSekarangJadi points={activePoints} />
                </div>
                
-               <div className="flex flex-col gap-4 overflow-y-auto pr-2 scrollbar-hide">
+               <div className="flex flex-col gap-4">
                   <div className="bg-purple-50/50 border border-purple-100 p-5 rounded-2xl shadow-sm">
                      <span className="text-[10px] font-black text-tcm-primary uppercase tracking-widest mb-4 block flex items-center gap-2">
                         <MapPin className="w-4 h-4" /> Daftar Titik Aktif
@@ -169,7 +169,7 @@ const ScoringAndPointsHub: React.FC<Props> = ({ analysis, onAnalyzeRequest, init
                   )}
                </div>
             </div>
-          </>
+          </div>
         ) : (
           <div className="h-full flex flex-col items-center justify-center text-purple-300 gap-4">
              <Stethoscope className="w-12 h-12 opacity-50" />

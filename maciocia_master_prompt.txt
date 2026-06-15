@@ -1,0 +1,56 @@
+MASTER PROMPT TCMPRO MACIOCIA EDITION
+
+Saya sedang membangun aplikasi bernama TCMPRO.
+
+Tujuan aplikasi adalah menjadi platform pendidikan, referensi klinis, dan decision support Traditional Chinese Medicine (TCM) paling lengkap berdasarkan:
+* Giovanni Maciocia – The Foundations of Chinese Medicine (3rd Edition)
+* Giovanni Maciocia – The Practice of Chinese Medicine (3rd Edition)
+
+Bangun sistem dengan arsitektur knowledge graph sehingga seluruh data saling terhubung.
+
+---
+
+# CORE KNOWLEDGE STRUCTURE
+Hubungkan seluruh entitas berikut:
+Disease
+↔ Pattern
+↔ Formula
+↔ Herb
+↔ Acupuncture Point
+↔ Channel
+↔ Organ (Zang Fu)
+↔ Tongue
+↔ Pulse
+↔ Etiology
+↔ Pathogenesis
+↔ Treatment Principle
+
+Semua entitas harus saling dapat ditelusuri dua arah.
+
+Contoh:
+Insomnia
+↓
+Heart Blood Deficiency
+↓
+Gui Pi Tang
+↓
+Ren Shen
+↓
+HT7 Shenmen
+↓
+Heart Channel
+
+dan sebaliknya.
+
+---
+
+# MODULE 1 — DISEASE ATLAS
+Buat database penyakit berdasarkan Maciocia.
+Minimal mencakup:
+* Abdominal Masses
+...
+(Detailed in chat history)
+...
+
+# FINAL OBJECTIVE
+Create the most comprehensive Maciocia-based Traditional Chinese Medicine learning and clinical decision support platform available, suitable for students, lecturers, clinicians, and licensing examination preparation.
